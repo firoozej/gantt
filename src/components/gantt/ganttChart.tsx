@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { createUseStyles } from "react-jss";
 import { TaskType, ZoomType } from "./types";
 import Config from "./config";
@@ -14,6 +14,7 @@ type PropTypes = {
 };
 const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
     const classes = useStyles();
+    const [ganttData, setGanttData] = useState<any>(data);
     const [minGanttCellCount, setMinGanttCellCount] = useState(0);
     const [zoom, setZoom] = useState<ZoomType>(ZoomType.Day);
     const [selectedTasks, setSelectedTasks] = useState<TaskType[]>([]);
@@ -27,46 +28,73 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
         resize();
     }, []);
 
+    useEffect(() => {
+        setGanttData(data);
+    }, [data]);
+
+    const handleIndent = () => {
+        let summaryTask: TaskType | undefined = undefined;
+        const sortedSelectedTasks = [...selectedTasks].sort(
+            (a: TaskType, b: TaskType) => a.order - b.order
+        );
+        if (sortedSelectedTasks[0].order > 1) {
+            summaryTask = ganttData[sortedSelectedTasks[0].order - 1];
+        }
+        if (summaryTask) {
+            let newGanttData = ganttData
+                .filter((task: TaskType) => !selectedTasks.some((t: TaskType) => t.id === task.id))
+                .map((task: TaskType) =>
+                    task.id === summaryTask?.id
+                        ? { ...task, children: [...task.children, ...selectedTasks] }
+                        : task
+                );
+            setGanttData(newGanttData);
+        }
+    };
+
     return (
         <div className={classes.gantt} id="gantt">
             <ToolBar
                 zoom={zoom}
                 onZoomChange={(selectedZoom: ZoomType) => setZoom(selectedZoom)}
-                onIndent={() => {}}
+                onIndent={handleIndent}
             />
             <div className={classes.row} id="ganttRow">
                 <div className={classes.left}>
                     <div className={classes.timeLineHeaderGap}></div>
                     <TaskHeader />
-                    {data.tasks.map((task: TaskType, index: number) => (
+                    {ganttData.tasks.map((task: TaskType, index: number) => (
                         <Task
                             key={task.id}
                             task={task}
-                            dayDuration={data.project.calendar.dayDuration}
+                            dayDuration={ganttData.project.calendar.dayDuration}
                             rowNumber={index}
+                            lastRow={index === ganttData.tasks.length - 1}
+                            active={selectedTasks.some(t => t.id === task.id)}
                             onTaskEdit={onTaskEdit}
-                            onTaskSelect={(task: TaskType) =>
-                                setSelectedTasks([...selectedTasks, task])
+                            onTaskSelect={(task: TaskType, selected: boolean) =>
+                                selected
+                                    ? setSelectedTasks([...selectedTasks, task])
+                                    : setSelectedTasks(selectedTasks.filter(t => t.id !== task.id))
                             }
-                            lastRow={index === data.tasks.length - 1}
                         />
                     ))}
                 </div>
                 <div className={classes.right} id="ganttRight">
                     <Timeline
                         zoom={zoom}
-                        start={data.project.start}
-                        end={data.project.end}
+                        start={ganttData.project.start}
+                        end={ganttData.project.end}
                         minCellCount={minGanttCellCount}
                     />
                     <div className={classes.taskHeaderGap}></div>
-                    {data.tasks.map((task: TaskType) => (
+                    {ganttData.tasks.map((task: TaskType) => (
                         <Bar
                             key={task.id}
                             zoom={zoom}
                             duration={task.duration}
-                            offset={task.start - data.project.start}
-                            dayDuration={data.project.calendar.dayDuration}
+                            offset={task.start - ganttData.project.start}
+                            dayDuration={ganttData.project.calendar.dayDuration}
                         />
                     ))}
                 </div>

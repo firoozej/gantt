@@ -1,8 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
 import { createUseStyles } from "react-jss";
-import { Dropdown, Menu } from "ui-ant";
-import { CaretRightOutlined } from "@ant-design/icons";
+import { Dropdown, Menu, Button } from "ui-ant";
 import Config from "./config";
 import { ZoomType } from "./types";
 import SelectData from "./utils/selectData";
@@ -13,22 +12,20 @@ type PropTypes = {
     onIndent: () => void;
 };
 
-const ToolBar: FunctionComponent<PropTypes> = ({ zoom, onZoomChange }) => {
+const ToolBar: FunctionComponent<PropTypes> = ({ zoom, onZoomChange, onIndent }) => {
     const { t } = useTranslation();
     const classes = useStyles();
+    
     return (
         <div className={classes.toolBar}>
             <Dropdown
                 overlay={
-                    <Menu onClick={() => {}}>
-                        <Menu.Item key="1" icon={<CaretRightOutlined />}>
-                            {t("Indent")}
-                        </Menu.Item>
+                    <Menu>
+                        <Menu.Item key="1" onClick={() => onIndent()}>{t("Indent")}</Menu.Item>
                     </Menu>
                 }
-                placement="bottomLeft"
-            >
-                {t("Schedule")}
+                placement="bottomLeft">
+                <Button>{t("Schedule")}</Button>
             </Dropdown>
             <SelectData
                 selectOptionField="name"

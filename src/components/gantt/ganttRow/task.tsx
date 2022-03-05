@@ -11,8 +11,9 @@ type PropTypes = {
     dayDuration: number;
     rowNumber: number;
     lastRow: boolean;
+    active: boolean;
     onTaskEdit: (task: TaskType) => void;
-    onTaskSelect: (task: TaskType) => void;
+    onTaskSelect: (task: TaskType, selected: boolean) => void;
 };
 
 const Task: React.FC<PropTypes> = ({
@@ -20,6 +21,7 @@ const Task: React.FC<PropTypes> = ({
     dayDuration,
     rowNumber,
     lastRow,
+    active,
     onTaskEdit,
     onTaskSelect,
 }) => {
@@ -34,6 +36,7 @@ const Task: React.FC<PropTypes> = ({
             <div
                 className={classnames(
                     classes.taskRow,
+                    active ? classes.active : "",
                     rowNumber % 2 === 0 ? classes.even : classes.odd,
                     lastRow && classes.lastRow
                 )}
@@ -41,8 +44,7 @@ const Task: React.FC<PropTypes> = ({
                     flexDirection: Config.direction === "rtl" ? "row-reverse" : "row",
                 }}
                 onDoubleClick={() => setEditModal({ visible: true })}
-                onClick={() => onTaskSelect(task)}
-            >
+                onClick={() => onTaskSelect(task, !active)}>
                 <div className={classes.task}></div>
                 <div className={classes.task}>{task.name}</div>
                 <div className={classes.task}>{toLocalDate(task.start, "YYYY/MM/DD")}</div>
@@ -75,6 +77,9 @@ const useStyles = createUseStyles({
     task: {
         width: "20%",
         textAlign: "center",
+    },
+    active: {
+        background: "#e6f7ff",
     },
     even: {},
     odd: {},

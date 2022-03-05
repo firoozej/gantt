@@ -1,2 +1,2 @@
 export * from "./modal";
-export { Dropdown, Menu } from "antd";
+export { Dropdown, Menu, Button } from "antd";

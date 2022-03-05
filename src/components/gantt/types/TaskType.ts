@@ -9,6 +9,6 @@ type TaskType = {
     end?: number;
     predecessors: { id: number; type: LinkType }[];
     resources: number[];
-    isSummary: boolean;
+    children: TaskType[];
 };
 export type { TaskType };

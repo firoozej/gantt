@@ -27,24 +27,67 @@ const App: React.FC = () => {
         ],
         tasks: [
             {
-                id: 1,
-                order: 1,
+                id: 1, 
+                order: 1,               
                 name: "task1",
                 duration: 2 * 24 * 60 * 60 * 1000,
                 start: 1633725000000,
-                predecessors: {},
-                isSummary: false,
+                predecessors: {},                
                 resources: [],
+                children: [],
+               
             },
             {
-                id: 2,
-                order: 2,
+                id: 2,                
                 name: "task2",
+                order:2,
                 duration: 3 * 24 * 60 * 60 * 1000,
-                start: 1633811400000,
-                isSummary: false,
+                start: 1633811400000,                
                 predecessors: {},
                 resources: [],
+                children: []
+            },
+            {
+                id: 3,
+                order:3,                
+                name: "task3",
+                duration: 3 * 24 * 60 * 60 * 1000,
+                start: 1633811400000,                
+                predecessors: {},
+                resources: [],
+                children: []
+                
+            },
+            {
+                id: 4,    
+                order:4,            
+                name: "task4",
+                duration: 3 * 24 * 60 * 60 * 1000,
+                start: 1633811400000,
+                
+                predecessors: {},
+                resources: [],
+                children: [{
+                    id: 5, 
+                    order:5,               
+                    name: "task5",
+                    duration: 3 * 24 * 60 * 60 * 1000,
+                    start: 1633811400000,                    
+                    predecessors: {},
+                    resources: [],
+                    children: []
+                    
+                },{
+                    id: 6,  
+                    order:6,              
+                    name: "tas6",
+                    duration: 3 * 24 * 60 * 60 * 1000,
+                    start: 1633811400000,                    
+                    predecessors: {},
+                    resources: [],
+                    children:[]
+                    
+                }]
             },
         ],
     };
