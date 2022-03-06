@@ -1,3 +1,4 @@
+import { DownOutlined } from "@ant-design/icons";
 import React, { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
 import { createUseStyles } from "react-jss";
@@ -15,17 +16,25 @@ type PropTypes = {
 const ToolBar: FunctionComponent<PropTypes> = ({ zoom, onZoomChange, onIndent }) => {
     const { t } = useTranslation();
     const classes = useStyles();
-    
+
     return (
         <div className={classes.toolBar}>
             <Dropdown
                 overlay={
                     <Menu>
-                        <Menu.Item key="1" onClick={() => onIndent()}>{t("Indent")}</Menu.Item>
+                        <Menu.Item key="1" onClick={() => onIndent()}>
+                            {t("Indent Task")}
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                            {t("Outdent Task")}
+                        </Menu.Item>
                     </Menu>
                 }
                 placement="bottomLeft">
-                <Button>{t("Schedule")}</Button>
+                <Button>
+                    {t("Schedule")}
+                    <DownOutlined />
+                </Button>
             </Dropdown>
             <SelectData
                 selectOptionField="name"
@@ -49,8 +58,8 @@ const useStyles = createUseStyles({
         ...(Config.direction === "rtl"
             ? { borderRight: "1px solid #ccc" }
             : { borderLeft: "1px solid #ccc" }),
-        borderTop: "1px solid #ccc",
         padding: "10px",
+        borderBottom: "1px solid #ccc",
     },
 });
 

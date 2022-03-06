@@ -40,7 +40,7 @@ const Timeline: FunctionComponent<PropTypes> = ({ zoom, start, end, minCellCount
         <div className={classes.timelineRow}>
             <div className={classes.level1Timeline}>
                 {firstRow.map((r, index) => {
-                    if (firstRow[index + 1] && r === firstRow[index + 1]) return <></>;
+                    if (firstRow[index + 1] && r === firstRow[index + 1]) return null;
                     return (
                         <div
                             key={index}

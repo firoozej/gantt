@@ -25,7 +25,7 @@ const useStyles = createUseStyles({
         flexDirection: Config.direction === "rtl" ? "row-reverse" : "row",
         borderBottom: "1px solid #ccc",
     },
-    header: { width: "20%", textAlign: "center" },
+    header: { width: "20%" },
 });
 
 export default TaskHeader;

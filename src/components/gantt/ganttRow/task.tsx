@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { createUseStyles } from "react-jss";
+import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
 import classnames from "classnames";
 import { TaskType } from "../types";
 import { useLocalDate } from "../utils";
@@ -9,21 +10,27 @@ import EditTaskModal from "./editTaskModal";
 type PropTypes = {
     task: TaskType;
     dayDuration: number;
-    rowNumber: number;
     lastRow: boolean;
     active: boolean;
+    indentLevel: number;
+    isSummary: boolean;
+    isOpen: boolean;
     onTaskEdit: (task: TaskType) => void;
     onTaskSelect: (task: TaskType, selected: boolean) => void;
+    onOpenClick: (taskId: number) => void;
 };
 
 const Task: React.FC<PropTypes> = ({
     task,
     dayDuration,
-    rowNumber,
     lastRow,
     active,
+    indentLevel,
+    isSummary,
+    isOpen,
     onTaskEdit,
     onTaskSelect,
+    onOpenClick,
 }) => {
     const classes = useStyles();
     const { toLocalDate } = useLocalDate();
@@ -31,13 +38,18 @@ const Task: React.FC<PropTypes> = ({
         visible: false,
     });
 
+    const handleToggle = (e: SyntheticEvent) => {
+        onOpenClick(task.id);
+        e.stopPropagation();
+    };
+
     return (
         <>
             <div
                 className={classnames(
                     classes.taskRow,
                     active ? classes.active : "",
-                    rowNumber % 2 === 0 ? classes.even : classes.odd,
+                    task.order % 2 === 0 ? classes.even : classes.odd,
                     lastRow && classes.lastRow
                 )}
                 style={{
@@ -45,14 +57,40 @@ const Task: React.FC<PropTypes> = ({
                 }}
                 onDoubleClick={() => setEditModal({ visible: true })}
                 onClick={() => onTaskSelect(task, !active)}>
-                <div className={classes.task}></div>
-                <div className={classes.task}>{task.name}</div>
-                <div className={classes.task}>{toLocalDate(task.start, "YYYY/MM/DD")}</div>
-                <div className={classes.task}>
+                <div className={classes.cell}></div>
+                <div className={classnames(classes.cell, classes.name)}>
+                    <div
+                        style={{
+                            width: (indentLevel * 10).toString() + "px",
+                        }}
+                        className={classes.indentIcon}
+                    />
+
+                    {isSummary && isOpen && (
+                        <CaretDownOutlined
+                            style={{
+                                [`margin${Config.direction === "rtl" ? "Right" : "Left"}`]: "-16px",
+                            }}
+                            onClick={handleToggle}
+                        />
+                    )}
+                    {isSummary && !isOpen && (
+                        <CaretRightOutlined
+                            style={{
+                                [`margin${Config.direction === "rtl" ? "Right" : "Left"}`]: "-16px",
+                            }}
+                            onClick={handleToggle}
+                        />
+                    )}
+                    <div>{task.name}</div>
+                </div>
+                <div className={classes.cell}>{toLocalDate(task.start, "YYYY/MM/DD")}</div>
+                <div className={classes.cell}>
                     {toLocalDate(task.start + task.duration, "YYYY/MM/DD")}
                 </div>
-                <div className={classes.task}>{(task.duration / dayDuration).toFixed(1)}d</div>
+                <div className={classes.cell}>{(task.duration / dayDuration).toFixed(1)}d</div>
             </div>
+
             <EditTaskModal
                 task={task}
                 visible={editModal.visible}
@@ -74,12 +112,18 @@ const useStyles = createUseStyles({
     lastRow: {
         borderBottom: "none",
     },
-    task: {
+    cell: {
         width: "20%",
-        textAlign: "center",
+    },
+    name: {
+        display: "flex",
+        alignItems: "center",
     },
     active: {
         background: "#e6f7ff",
+    },
+    indentIcon: {
+        height: "30px",
     },
     even: {},
     odd: {},

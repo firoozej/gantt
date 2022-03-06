@@ -4,7 +4,7 @@ import { TaskType, ZoomType } from "./types";
 import Config from "./config";
 import TaskHeader from "./ganttRow/taskHeader";
 import Timeline from "./timeline";
-import Task from "./ganttRow/task";
+import TaskRow from "./ganttRow/taskRow";
 import Bar from "./ganttRow/bar";
 import ToolBar from "./toolBar";
 
@@ -40,6 +40,7 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
         if (sortedSelectedTasks[0].order > 1) {
             summaryTask = ganttData[sortedSelectedTasks[0].order - 1];
         }
+        
         if (summaryTask) {
             let newGanttData = ganttData
                 .filter((task: TaskType) => !selectedTasks.some((t: TaskType) => t.id === task.id))
@@ -63,22 +64,6 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
                 <div className={classes.left}>
                     <div className={classes.timeLineHeaderGap}></div>
                     <TaskHeader />
-                    {ganttData.tasks.map((task: TaskType, index: number) => (
-                        <Task
-                            key={task.id}
-                            task={task}
-                            dayDuration={ganttData.project.calendar.dayDuration}
-                            rowNumber={index}
-                            lastRow={index === ganttData.tasks.length - 1}
-                            active={selectedTasks.some(t => t.id === task.id)}
-                            onTaskEdit={onTaskEdit}
-                            onTaskSelect={(task: TaskType, selected: boolean) =>
-                                selected
-                                    ? setSelectedTasks([...selectedTasks, task])
-                                    : setSelectedTasks(selectedTasks.filter(t => t.id !== task.id))
-                            }
-                        />
-                    ))}
                 </div>
                 <div className={classes.right} id="ganttRight">
                     <Timeline
@@ -88,17 +73,25 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
                         minCellCount={minGanttCellCount}
                     />
                     <div className={classes.taskHeaderGap}></div>
-                    {ganttData.tasks.map((task: TaskType) => (
-                        <Bar
-                            key={task.id}
-                            zoom={zoom}
-                            duration={task.duration}
-                            offset={task.start - ganttData.project.start}
-                            dayDuration={ganttData.project.calendar.dayDuration}
-                        />
-                    ))}
                 </div>
             </div>
+            {ganttData.tasks.map((task: TaskType, index: number) => (
+                <TaskRow
+                    key={task.id}
+                    task={task}
+                    dayDuration={ganttData.project.calendar.dayDuration}
+                    lastRow={false}
+                    zoom={zoom}
+                    selectedTasks={selectedTasks}
+                    onTaskEdit={onTaskEdit}
+                    projectStart={ganttData.project.start}
+                    onTaskSelect={(task: TaskType, selected: boolean) =>
+                        selected
+                            ? setSelectedTasks([...selectedTasks, task])
+                            : setSelectedTasks(selectedTasks.filter(t => t.id !== task.id))
+                    }
+                />
+            ))}
         </div>
     );
 };
@@ -106,6 +99,7 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
 const useStyles = createUseStyles({
     gantt: {
         overflow: "scroll",
+        borderTop: "1px solid #ccc",
     },
     row: {
         display: "flex",
@@ -113,7 +107,6 @@ const useStyles = createUseStyles({
     },
     right: {
         width: "60%",
-        borderTop: "1px solid #ccc",
         ...(Config.direction === "rtl"
             ? { borderLeft: "1px solid #ccc", borderRight: "1px solid #ccc" }
             : {}),
@@ -128,8 +121,7 @@ const useStyles = createUseStyles({
         height: "30px",
     },
     timeLineHeaderGap: {
-        height: "62px",
-        borderTop: "1px solid #ccc",
+        height: "61px",
         borderBottom: "1px solid #ccc",
     },
 });
