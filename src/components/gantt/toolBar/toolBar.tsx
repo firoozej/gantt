@@ -3,17 +3,26 @@ import React, { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
 import { createUseStyles } from "react-jss";
 import { Dropdown, Menu, Button } from "ui-ant";
-import Config from "./config";
-import { ZoomType } from "./types";
-import SelectData from "./utils/selectData";
+import Config from "../config";
+import { TaskType, ZoomType } from "../types";
+import SelectData from "../utils/selectData";
+import IndentMenu from "./indentMenu";
 
 type PropTypes = {
     zoom: ZoomType;
+    selectedTasks: TaskType[];
+    tasks: TaskType[];
+    onTasksChange: (tasks: TaskType[]) => void;
     onZoomChange: (zoom: ZoomType) => void;
-    onIndent: () => void;
 };
 
-const ToolBar: FunctionComponent<PropTypes> = ({ zoom, onZoomChange, onIndent }) => {
+const ToolBar: FunctionComponent<PropTypes> = ({
+    zoom,
+    selectedTasks,
+    tasks,
+    onTasksChange,
+    onZoomChange,
+}) => {
     const { t } = useTranslation();
     const classes = useStyles();
 
@@ -22,12 +31,12 @@ const ToolBar: FunctionComponent<PropTypes> = ({ zoom, onZoomChange, onIndent })
             <Dropdown
                 overlay={
                     <Menu>
-                        <Menu.Item key="1" onClick={() => onIndent()}>
-                            {t("Indent Task")}
-                        </Menu.Item>
-                        <Menu.Item key="2">
-                            {t("Outdent Task")}
-                        </Menu.Item>
+                        <IndentMenu
+                            tasks={tasks}
+                            selectedTasks={selectedTasks}
+                            onTasksChange={onTasksChange}
+                        />
+                        <Menu.Item key="2">{t("Outdent Task")}</Menu.Item>
                     </Menu>
                 }
                 placement="bottomLeft">

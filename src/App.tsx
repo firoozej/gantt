@@ -28,7 +28,7 @@ const App: React.FC = () => {
         tasks: [
             {
                 id: 1,
-                order: 1,
+                order: 0,
                 name: "task1",
                 duration: 2 * 24 * 60 * 60 * 1000,
                 start: 1633725000000,
@@ -39,7 +39,7 @@ const App: React.FC = () => {
             {
                 id: 2,
                 name: "task2",
-                order: 2,
+                order: 1,
                 duration: 3 * 24 * 60 * 60 * 1000,
                 start: 1633811400000,
                 predecessors: {},
@@ -48,7 +48,7 @@ const App: React.FC = () => {
             },
             {
                 id: 3,
-                order: 3,
+                order: 2,
                 name: "task3",
                 duration: 3 * 24 * 60 * 60 * 1000,
                 start: 1633811400000,
@@ -58,7 +58,7 @@ const App: React.FC = () => {
             },
             {
                 id: 4,
-                order: 4,
+                order: 3,
                 name: "task4",
                 duration: 3 * 24 * 60 * 60 * 1000,
                 start: 1633811400000,
@@ -68,7 +68,7 @@ const App: React.FC = () => {
                 children: [
                     {
                         id: 5,
-                        order: 5,
+                        order: 4,
                         name: "task5",
                         duration: 3 * 24 * 60 * 60 * 1000,
                         start: 1633811400000,
@@ -78,7 +78,7 @@ const App: React.FC = () => {
                     },
                     {
                         id: 6,
-                        order: 6,
+                        order: 5,
                         name: "task6",
                         duration: 3 * 24 * 60 * 60 * 1000,
                         start: 1633811400000,
@@ -87,7 +87,7 @@ const App: React.FC = () => {
                         children: [
                             {
                                 id: 7,
-                                order: 7,
+                                order: 6,
                                 name: "task7",
                                 duration: 3 * 24 * 60 * 60 * 1000,
                                 start: 1633811400000,

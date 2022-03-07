@@ -5,8 +5,7 @@ import Config from "./config";
 import TaskHeader from "./ganttRow/taskHeader";
 import Timeline from "./timeline";
 import TaskRow from "./ganttRow/taskRow";
-import Bar from "./ganttRow/bar";
-import ToolBar from "./toolBar";
+import ToolBar from "./toolBar/toolBar";
 
 type PropTypes = {
     onTaskEdit: (task: TaskType) => void;
@@ -32,33 +31,14 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
         setGanttData(data);
     }, [data]);
 
-    const handleIndent = () => {
-        let summaryTask: TaskType | undefined = undefined;
-        const sortedSelectedTasks = [...selectedTasks].sort(
-            (a: TaskType, b: TaskType) => a.order - b.order
-        );
-        if (sortedSelectedTasks[0].order > 1) {
-            summaryTask = ganttData[sortedSelectedTasks[0].order - 1];
-        }
-        
-        if (summaryTask) {
-            let newGanttData = ganttData
-                .filter((task: TaskType) => !selectedTasks.some((t: TaskType) => t.id === task.id))
-                .map((task: TaskType) =>
-                    task.id === summaryTask?.id
-                        ? { ...task, children: [...task.children, ...selectedTasks] }
-                        : task
-                );
-            setGanttData(newGanttData);
-        }
-    };
-
     return (
         <div className={classes.gantt} id="gantt">
             <ToolBar
                 zoom={zoom}
+                selectedTasks={selectedTasks}
+                tasks={ganttData.tasks}
                 onZoomChange={(selectedZoom: ZoomType) => setZoom(selectedZoom)}
-                onIndent={handleIndent}
+                onTasksChange={(tasks: TaskType[]) => setGanttData({ ...ganttData, tasks })}
             />
             <div className={classes.row} id="ganttRow">
                 <div className={classes.left}>
