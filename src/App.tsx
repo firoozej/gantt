@@ -62,7 +62,6 @@ const App: React.FC = () => {
                 name: "task4",
                 duration: 3 * 24 * 60 * 60 * 1000,
                 start: 1633811400000,
-
                 predecessors: {},
                 resources: [],
                 children: [
