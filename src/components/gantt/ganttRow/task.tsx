@@ -49,7 +49,7 @@ const Task: React.FC<PropTypes> = ({
                 className={classnames(
                     classes.taskRow,
                     active ? classes.active : "",
-                    task.order % 2 === 0 ? classes.even : classes.odd,
+                    task.rowNumber % 2 === 0 ? classes.even : classes.odd,
                     lastRow && classes.lastRow
                 )}
                 style={{

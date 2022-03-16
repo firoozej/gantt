@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu } from "ui-ant";
 import { TaskType } from "components/gantt/types";
-import { findTaskByOrder } from "./findTaskByOrder";
+import { findTaskByRowNumber } from "./findTaskByRowNumber";
 
 type PropTypes = {
     tasks: TaskType[];
@@ -21,18 +21,38 @@ const IndentMenu: FunctionComponent<PropTypes> = ({ selectedTasks, tasks, onTask
         }
 
         let disableIndent = false;
-        let orders = selectedTasks.map(t => t.order);
-        orders.sort((a, b) => a - b);
+        const orderedSelectedTasks = [...selectedTasks].sort(
+            (a: TaskType, b: TaskType) => a.rowNumber - b.rowNumber
+        );
+        const selectedTasksIds = selectedTasks.map(task => task.id);
 
-        for (let index = 0; index < orders.length; index++) {
-            if (orders[index + 1] && orders[index + 1] - orders[index] > 1) {
+        for (let index = 0; index < orderedSelectedTasks.length; index++) {
+            const nextSelectedTaskOrder = orderedSelectedTasks[index + 1]
+                ? orderedSelectedTasks[index + 1]
+                : null;
+            const currentSelectedTaskOrder = orderedSelectedTasks[index];
+            if (
+                nextSelectedTaskOrder &&
+                nextSelectedTaskOrder.rowNumber - currentSelectedTaskOrder.rowNumber !== 1
+            ) {
+                disableIndent = true;
+                break;
+            }
+            if (
+                currentSelectedTaskOrder.children.length > 0 &&
+                currentSelectedTaskOrder.children.some(c => !selectedTasksIds.includes(c.id))
+            ) {
                 disableIndent = true;
                 break;
             }
         }
-        if (orders[0] - 1 >= 0) {
-            const summaryTask = findTaskByOrder(tasks, orders[0] - 1);
-            const selectedTasksIds = selectedTasks.map(task => task.id);
+
+        const firstSelectedTask = orderedSelectedTasks[0];
+        if (firstSelectedTask.rowNumber - 1 <= 1) {
+            disableIndent = true;
+        } else {
+            const summaryTask = findTaskByRowNumber(tasks, firstSelectedTask.rowNumber - 1);
+
             if (summaryTask.children.some(task => selectedTasksIds.includes(task.id))) {
                 disableIndent = true;
             }
@@ -40,7 +60,9 @@ const IndentMenu: FunctionComponent<PropTypes> = ({ selectedTasks, tasks, onTask
         setDisabled(disableIndent);
     }, [selectedTasks, tasks]);
 
-    const handleIndent = () => {};
+    const handleIndent = () => {
+        onTasksChange(tasks);
+    };
 
     return (
         <Menu.Item key="1" onClick={handleIndent} disabled={disabled}>

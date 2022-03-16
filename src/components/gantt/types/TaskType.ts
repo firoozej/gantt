@@ -2,7 +2,7 @@ import { LinkType } from "./LinkType";
 
 type TaskType = {
     id: number;
-    order: number;
+    rowNumber: number;
     name: string;
     duration: number;
     start: number;
