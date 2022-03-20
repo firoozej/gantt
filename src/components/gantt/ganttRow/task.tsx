@@ -2,7 +2,7 @@ import React, { SyntheticEvent, useState } from "react";
 import { createUseStyles } from "react-jss";
 import { CaretDownOutlined, CaretRightOutlined } from "@ant-design/icons";
 import classnames from "classnames";
-import { TaskType } from "../types";
+import { TaskType } from "types";
 import { useLocalDate } from "../utils";
 import Config from "../config";
 import EditTaskModal from "./editTaskModal";

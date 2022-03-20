@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu } from "ui-ant";
-import { TaskType } from "components/gantt/types";
+import { TaskType } from "types";
 import { findTaskByRowNumber } from "./findTaskByRowNumber";
 
 type PropTypes = {

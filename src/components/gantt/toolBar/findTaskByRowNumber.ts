@@ -1,4 +1,4 @@
-import { TaskType } from "../types";
+import { TaskType } from "types";
 
 export const findTaskByRowNumber = (tasks: TaskType[], rowNumber: number): TaskType => {
     if (tasks[0].rowNumber === rowNumber) {

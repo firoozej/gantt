@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal } from "ui-ant";
-import { TaskType } from "../types";
+import { TaskType } from "types";
 
 type PropTypes = {
     task: TaskType;
