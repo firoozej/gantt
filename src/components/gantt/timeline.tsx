@@ -3,7 +3,7 @@ import moment from "moment";
 import classnames from "classnames";
 import { ZoomType } from "types";
 import Config from "config";
-import { useLocalDate } from "./utils";
+import { useLocalDate } from "utils";
 import { createUseStyles } from "react-jss";
 
 type PropTypes = {

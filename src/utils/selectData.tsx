@@ -33,4 +33,4 @@ const SelectData: React.FC<PropTypes> = ({
     );
 };
 
-export default SelectData;
+export { SelectData };
