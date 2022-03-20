@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createUseStyles } from "react-jss";
 import { TaskType, ZoomType } from "types";
-import Config from "../config";
+import Config from "config";
 import Bar from "./bar";
 import Task from "./task";
 

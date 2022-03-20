@@ -1,7 +1,7 @@
 import React from "react";
 import classnames from "classnames";
 import { createUseStyles } from "react-jss";
-import Config from "../config";
+import Config from "config";
 import { ZoomType } from "types";
 
 type PropTypes = {

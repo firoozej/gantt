@@ -3,7 +3,7 @@ import React, { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
 import { createUseStyles } from "react-jss";
 import { Dropdown, Menu, Button } from "ui-ant";
-import Config from "../config";
+import Config from "config";
 import { TaskType, ZoomType } from "types";
 import SelectData from "../utils/selectData";
 import IndentMenu from "./indentMenu";

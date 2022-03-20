@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { useTranslation } from "react-i18next";
 import { createUseStyles } from "react-jss";
-import Config from "../config";
+import Config from "config";
 
 const TaskHeader: FunctionComponent = () => {
     const classes = useStyles();

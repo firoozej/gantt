@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { createUseStyles } from "react-jss";
 import { TaskType, ZoomType } from "types";
-import Config from "./config";
+import Config from "config";
 import TaskHeader from "./ganttRow/taskHeader";
 import Timeline from "./timeline";
 import TaskRow from "./ganttRow/taskRow";
