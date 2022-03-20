@@ -1,10 +1,11 @@
 import { fireEvent } from "@testing-library/react";
 import { Menu } from "ui-ant";
 import { initialGanttData, renderComponent } from "test";
+import { TaskType } from "types";
 import IndentMenu from "./indentMenu";
 
 describe("<IndentMenu />", () => {
-    let tasks = [...initialGanttData.tasks];
+    let tasks: TaskType[] = [...initialGanttData.tasks];
 
     it("should disable indent menu if selected tasks are not adjacent", async () => {
         const selectedTasks = [tasks[1], tasks[2].children[0]];

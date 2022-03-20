@@ -23,7 +23,7 @@ const initialGanttData = {
             name: "task1",
             duration: 1,
             start: 1,
-            predecessors: {},
+            predecessors: [],
             resources: [],
             children: [],
         },
@@ -33,7 +33,7 @@ const initialGanttData = {
             name: "task2",
             duration: 1,
             start: 1,
-            predecessors: {},
+            predecessors: [],
             resources: [],
             children: [],
         },
@@ -43,7 +43,7 @@ const initialGanttData = {
             name: "task3",
             duration: 1,
             start: 1,
-            predecessors: {},
+            predecessors: [],
             resources: [],
             children: [
                 {
@@ -52,7 +52,7 @@ const initialGanttData = {
                     name: "task4",
                     duration: 1,
                     start: 1,
-                    predecessors: {},
+                    predecessors: [],
                     resources: [],
                     children: [],
                 },
@@ -62,7 +62,7 @@ const initialGanttData = {
                     name: "task5",
                     duration: 1,
                     start: 1,
-                    predecessors: {},
+                    predecessors: [],
                     resources: [],
                     children: [
                         {
@@ -71,7 +71,7 @@ const initialGanttData = {
                             name: "task6",
                             duration: 1,
                             start: 1,
-                            predecessors: {},
+                            predecessors: [],
                             resources: [],
                             children: [],
                         },
