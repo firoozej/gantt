@@ -49,7 +49,6 @@ const Task: React.FC<PropTypes> = ({
                 className={classnames(
                     classes.taskRow,
                     active ? classes.active : "",
-                    task.rowNumber % 2 === 0 ? classes.even : classes.odd,
                     lastRow && classes.lastRow
                 )}
                 style={{
@@ -76,6 +75,7 @@ const Task: React.FC<PropTypes> = ({
                     )}
                     {isSummary && !isOpen && (
                         <CaretRightOutlined
+                            area-label={`expand ${task.name}`}
                             style={{
                                 [`margin${Config.direction === "rtl" ? "Right" : "Left"}`]: "-16px",
                             }}

@@ -5,21 +5,21 @@ import { createUseStyles } from "react-jss";
 import { Dropdown, Menu, Button } from "ui-ant";
 import Config from "config";
 import { TaskType, ZoomType } from "types";
-import { SelectData } from "utils";
+import { SelectData, TaskTree } from "utils";
 import IndentMenu from "./indentMenu";
 
 type PropTypes = {
     zoom: ZoomType;
     selectedTasks: TaskType[];
-    tasks: TaskType[];
-    onTasksChange: (tasks: TaskType[]) => void;
+    taskTree: TaskTree;
+    onTasksChange: (taskTree: TaskTree) => void;
     onZoomChange: (zoom: ZoomType) => void;
 };
 
 const ToolBar: FunctionComponent<PropTypes> = ({
     zoom,
     selectedTasks,
-    tasks,
+    taskTree,
     onTasksChange,
     onZoomChange,
 }) => {
@@ -32,7 +32,7 @@ const ToolBar: FunctionComponent<PropTypes> = ({
                 overlay={
                     <Menu>
                         <IndentMenu
-                            tasks={tasks}
+                            taskTree={taskTree}
                             selectedTasks={selectedTasks}
                             onTasksChange={onTasksChange}
                         />

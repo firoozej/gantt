@@ -19,7 +19,8 @@ const initialGanttData = {
     tasks: [
         {
             id: 1,
-            rowNumber: 1,
+            sibling: 1,
+            parent: null,
             name: "task1",
             duration: 1,
             start: 1,
@@ -29,7 +30,8 @@ const initialGanttData = {
         },
         {
             id: 2,
-            rowNumber: 2,
+            sibling: 2,
+            parent: null,
             name: "task2",
             duration: 1,
             start: 1,
@@ -39,7 +41,8 @@ const initialGanttData = {
         },
         {
             id: 3,
-            rowNumber: 3,
+            sibling: 3,
+            parent: null,
             name: "task3",
             duration: 1,
             start: 1,
@@ -48,7 +51,8 @@ const initialGanttData = {
             children: [
                 {
                     id: 4,
-                    rowNumber: 4,
+                    sibling: 1,
+                    parent: 3,
                     name: "task4",
                     duration: 1,
                     start: 1,
@@ -58,7 +62,8 @@ const initialGanttData = {
                 },
                 {
                     id: 5,
-                    rowNumber: 5,
+                    sibling: 2,
+                    parent: 3,
                     name: "task5",
                     duration: 1,
                     start: 1,
@@ -67,7 +72,8 @@ const initialGanttData = {
                     children: [
                         {
                             id: 6,
-                            rowNumber: 6,
+                            sibling: 1,
+                            parent: 5,
                             name: "task6",
                             duration: 1,
                             start: 1,
@@ -78,6 +84,17 @@ const initialGanttData = {
                     ],
                 },
             ],
+        },
+        {
+            id: 7,
+            sibling: 4,
+            parent: null,
+            name: "task7",
+            duration: 1,
+            start: 1,
+            predecessors: [],
+            resources: [],
+            children: [],
         },
     ],
 };

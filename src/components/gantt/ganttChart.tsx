@@ -6,6 +6,7 @@ import TaskHeader from "./ganttRow/taskHeader";
 import Timeline from "./timeline";
 import TaskRow from "./ganttRow/taskRow";
 import ToolBar from "./toolBar/toolBar";
+import { TaskTree } from "utils";
 
 type PropTypes = {
     onTaskEdit: (task: TaskType) => void;
@@ -13,7 +14,7 @@ type PropTypes = {
 };
 const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
     const classes = useStyles();
-    const [ganttData, setGanttData] = useState<any>(data);
+    const [ganttData, setGanttData] = useState<any>({...data, taskTree: new TaskTree(data.tasks)});
     const [minGanttCellCount, setMinGanttCellCount] = useState(0);
     const [zoom, setZoom] = useState<ZoomType>(ZoomType.Day);
     const [selectedTasks, setSelectedTasks] = useState<TaskType[]>([]);
@@ -28,7 +29,7 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
     }, []);
 
     useEffect(() => {
-        setGanttData(data);
+        setGanttData({...data, taskTree: new TaskTree(data.tasks)});
     }, [data]);
 
     return (
@@ -36,9 +37,9 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
             <ToolBar
                 zoom={zoom}
                 selectedTasks={selectedTasks}
-                tasks={ganttData.tasks}
+                taskTree={ganttData.taskTree}
                 onZoomChange={(selectedZoom: ZoomType) => setZoom(selectedZoom)}
-                onTasksChange={(tasks: TaskType[]) => setGanttData({ ...ganttData, tasks })}
+                onTasksChange={(taskTree: TaskTree) => setGanttData({ ...ganttData, taskTree })}
             />
             <div className={classes.row} id="ganttRow">
                 <div className={classes.left}>
@@ -55,7 +56,7 @@ const Gantt: React.FC<PropTypes> = ({ onTaskEdit, data }) => {
                     <div className={classes.taskHeaderGap}></div>
                 </div>
             </div>
-            {ganttData.tasks.map((task: TaskType, index: number) => (
+            {ganttData.taskTree.getTasks().map((task: TaskType, index: number) => (
                 <TaskRow
                     key={task.id}
                     task={task}
