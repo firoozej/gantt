@@ -2,20 +2,7 @@ const initialGanttData = {
     project: {
         start: 1633638600000,
         end: 1633638600000 + 3 * 24 * 60 * 60 * 1000,
-        calendar: {
-            dayDuration: 8 * 60 * 60 * 1000,
-        },
     },
-    resources: [
-        {
-            id: 1,
-            name: "cnc1",
-        },
-        {
-            id: 2,
-            name: "cnc2",
-        },
-    ],
     tasks: [
         {
             id: 1,

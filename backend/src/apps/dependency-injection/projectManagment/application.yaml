@@ -1,0 +1,15 @@
+services:
+  Apps.projectManagment.controllers.ProjectController:
+    class: ../../controllers/ProjectController
+    arguments: ["@Shared.QueryBus"]
+
+  Apps.projectManagment.ProjectRepository:
+  class: ../../../contexts/projectManagment/infrastructure/persistence/MongoProjectRepository
+
+  Apps.projectManagment.ProjectQueryHandler:
+    class: ../../../contexts/projectManagment/application/ProjectQueryHandler
+    arguments: ['@Apps.projectManagment.ProjectRepository']
+    tags:
+      - { name: 'queryHandler' }
+
+  
