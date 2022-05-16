@@ -2,8 +2,8 @@ import { Controller } from './Controller';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { QueryBus } from 'contexts/shared/domain/QueryBus';
-import { ProjectQuery } from 'contexts/projectManagment/application/ProjectQuery';
-import { ProjectResponse } from 'contexts/projectManagment/application/ProjectResponse';
+import { ProjectQuery } from 'contexts/projectManagement/application/ProjectQuery';
+import { ProjectResponse } from 'contexts/projectManagement/application/ProjectResponse';
 import { ResourceNotExistError } from 'contexts/shared/domain/ResourceNotExistError';
 
 export class ProjectController implements Controller {

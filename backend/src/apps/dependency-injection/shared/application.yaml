@@ -1,8 +1,8 @@
 services: 
   Shared.QueryHandlersInformation:
-    class: ../../../contexts/shared/infrastructure/QueryHandlersInformation
+    class: contexts/shared/infrastructure/QueryHandlersInformation
     arguments: ['!tagged queryHandler']
  
   Shared.QueryBus:
-    class: ../../../contexts/shared/infrastructure/InMemoryQueryBus
+    class: contexts/shared/infrastructure/InMemoryQueryBus
     arguments: ['@Shared.QueryHandlersInformation']

@@ -1,5 +1,5 @@
-import { ProjectRepository } from 'contexts/projectManagment/domain/interface/ProjectRepository';
-import { Project } from 'contexts/projectManagment/domain/Project';
+import { ProjectRepository } from 'contexts/projectManagement/domain/interface/ProjectRepository';
+import { Project } from 'contexts/projectManagement/domain/Project';
 import { Nullable } from 'contexts/shared/domain/Nullable';
 
 export class MongoProjectRepository implements ProjectRepository {
