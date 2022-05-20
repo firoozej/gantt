@@ -11,3 +11,9 @@ services:
     arguments: ['@Apps.projectManagement.ProjectRepository']
     tags:
         - { name: 'queryHandler' }
+
+  Apps.projectManagement.ProjectsQueryHandler:
+    class: contexts/projectManagement/application/ProjectsQueryHandler
+    arguments: ['@Apps.projectManagement.ProjectRepository']
+    tags:
+        - { name: 'queryHandler' }

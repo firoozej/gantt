@@ -13,6 +13,16 @@ export class MongoProjectRepository implements ProjectRepository {
         );
         return new Promise((resolve) => resolve(project));
     }
+    findAll(): Promise<Array<Project>> {
+        const project = new Project(
+            '1',
+            'test project',
+            '1633638600000',
+            '1633638600000 + 3 * 24 * 60 * 60 * 1000',
+            [],
+        );
+        return new Promise((resolve) => resolve([project]));
+    }
     save(project: Project): Promise<void> {
         throw new Error('Method not implemented.');
     }
