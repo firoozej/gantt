@@ -1,12 +1,13 @@
 import { Response } from 'contexts/shared/domain/Response';
 import { Project } from '../domain/Project';
+import { Task } from '../domain/Task';
 
 export class ProjectResponse extends Response {
     readonly id: string;
     readonly title: string;
     readonly start: string;
     readonly end: string;
-    readonly tasks: Array<string>;
+    readonly tasks: Array<Task>;
 
     constructor(project: Project) {
         super();
