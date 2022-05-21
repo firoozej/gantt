@@ -1,12 +1,13 @@
 import { ApolloError } from 'apollo-server-express';
 import container from 'apps/dependency-injection';
+import { ProjectRequest } from 'contexts/projectManagement/application/ProjectReuest';
 
 const ProjectResolvers = {
     Query: {
-        project: async (id: string) => {
+        project: async (id: string, includeTasks: boolean) => {
             const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
             try {
-                return await projectController.project({ id });
+                return await projectController.project(new ProjectRequest(id, includeTasks));
             } catch (e: any) {
                 return new ApolloError(e.message);
             }
