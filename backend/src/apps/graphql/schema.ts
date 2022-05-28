@@ -13,7 +13,7 @@ export const typeDefs = gql`
         title: String
     }
     type Query {
-        project(id: String!, includeTasks: Boolean): Project
+        project(id: String!, withTasks: Boolean): Project
         projects: [Project]
     }
 `;

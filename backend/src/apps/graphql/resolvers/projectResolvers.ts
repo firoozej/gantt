@@ -4,10 +4,10 @@ import { ProjectRequest } from 'contexts/projectManagement/application/ProjectRe
 
 const ProjectResolvers = {
     Query: {
-        project: async (id: string, includeTasks: boolean) => {
+        project: async (id: string, withTasks: boolean) => {
             const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
             try {
-                return await projectController.project(new ProjectRequest(id, includeTasks));
+                return await projectController.project(new ProjectRequest(id, withTasks));
             } catch (e: any) {
                 return new ApolloError(e.message);
             }

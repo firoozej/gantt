@@ -3,7 +3,7 @@ import { Project } from 'contexts/projectManagement/domain/Project';
 import { Nullable } from 'contexts/shared/domain/Nullable';
 
 export class MongoProjectRepository implements ProjectRepository {
-    find(id: string): Promise<Nullable<Project>> {
+    find(id: string, withTasks: boolean): Promise<Nullable<Project>> {
         const project = new Project(
             '1',
             'test project',
