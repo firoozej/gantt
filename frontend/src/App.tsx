@@ -2,33 +2,67 @@ import React from "react";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import "antd/dist/antd.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import Gantt from "./components/gantt/ganttChart";
 import TranslationProvider from "./translation/translationProvider";
 import { resources } from "translation/resources";
 import { initialGanttData } from "test";
+import ProjectOverview from "components/project/overview";
 
 const App: React.FC = () => {
     const data = { ...initialGanttData };
     i18n.use(initReactI18next) // passes i18n down to react-i18next
         .init({
             resources,
-            lng: "en", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
-            // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage
-            // if you're using a language detector, do not define the lng option
-
+            lng: "en",
             interpolation: {
                 escapeValue: false, // react already safes from xss
             },
         });
+
+    const httpLink = new HttpLink({
+        uri: "http://localhost:4001/graphql",
+    });
+
+    const errorLink = onError(({ graphQLErrors, networkError }) => {
+        if (graphQLErrors)
+            graphQLErrors.forEach(({ message, locations, path }) =>
+                console.log(
+                    `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+                )
+            );
+
+        if (networkError) console.log(`[Network error]: ${networkError}`);
+    });
+
+    const client = new ApolloClient({
+        link: from([errorLink, httpLink]),
+        cache: new InMemoryCache(),
+    });
+
     return (
         <div style={{ width: "95%", margin: "20px auto" }}>
             <TranslationProvider local="en-GB">
-                <Gantt
-                    data={data}
-                    onTaskEdit={() => {
-                        console.log("yes");
-                    }}
-                />
+                <ApolloProvider client={client}>
+                    <Router>
+                        <Routes>
+                            <Route path="/projects" element={<ProjectOverview />} />
+                            <Route
+                                path="/"
+                                element={
+                                    <Gantt
+                                        data={data}
+                                        onTaskEdit={() => {
+                                            console.log("yes");
+                                        }}
+                                    />
+                                }
+                            />
+                        </Routes>
+                    </Router>
+                </ApolloProvider>
             </TranslationProvider>
         </div>
     );

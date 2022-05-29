@@ -1,6 +1,6 @@
 import { ApolloError } from 'apollo-server-express';
 import container from 'apps/dependency-injection';
-import { ProjectRequest } from 'contexts/projectManagement/application/ProjectReuest';
+import { ProjectRequest } from 'contexts/projectManagement/application/project/query/ProjectReuest';
 
 const ProjectResolvers = {
     Query: {
@@ -16,6 +16,16 @@ const ProjectResolvers = {
             const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
             try {
                 return await projectController.projects();
+            } catch (e: any) {
+                return new ApolloError(e.message);
+            }
+        },
+    },
+    Mutation: {
+        createProject: async (title: string, start: string, predictedEnd: string) => {
+            const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
+            try {
+                return await projectController.create({title, start, predictedEnd});
             } catch (e: any) {
                 return new ApolloError(e.message);
             }

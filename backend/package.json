@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev:backend": "ts-node-dev --ignore-watch node_modules -r tsconfig-paths/register  src/apps/start.ts"
+        "start": "ts-node-dev --ignore-watch node_modules -r tsconfig-paths/register  src/apps/start.ts"
     },
     "author": "",
     "license": "ISC",
@@ -32,6 +32,7 @@
         "helmet": "^5.0.2",
         "http": "^0.0.1-security",
         "http-status": "^1.5.1",
+        "mongoose": "^6.3.4",
         "node-dependency-injection": "^2.7.3",
         "remove": "^0.1.5",
         "ts-node": "^10.7.0"

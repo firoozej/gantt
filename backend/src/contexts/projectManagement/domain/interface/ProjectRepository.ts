@@ -4,5 +4,5 @@ import { Project } from '../Project';
 export interface ProjectRepository {
     find(id: string, withTasks: boolean): Promise<Nullable<Project>>;
     findAll(): Promise<Array<Project>>;
-    save(project: Project): Promise<void>;
+    save(project: Omit<Project, "id" | "tasks">): Promise<Project>;
 }

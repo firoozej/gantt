@@ -1,19 +1,25 @@
 services:
   Apps.projectManagement.controllers.ProjectController:
     class: apps/controllers/ProjectController
-    arguments: ['@Shared.QueryBus']
+    arguments: ['@Shared.QueryBus', '@Shared.CommandBus']
 
   Apps.projectManagement.ProjectRepository:
     class: contexts/projectManagement/infrastructure/persistence/MongoProjectRepository
 
   Apps.projectManagement.ProjectQueryHandler:
-    class: contexts/projectManagement/application/ProjectQueryHandler
+    class: contexts/projectManagement/application/project/query/ProjectQueryHandler
     arguments: ['@Apps.projectManagement.ProjectRepository']
     tags:
         - { name: 'queryHandler' }
 
   Apps.projectManagement.ProjectsQueryHandler:
-    class: contexts/projectManagement/application/ProjectsQueryHandler
+    class: contexts/projectManagement/application/project/query/ProjectsQueryHandler
     arguments: ['@Apps.projectManagement.ProjectRepository']
     tags:
         - { name: 'queryHandler' }
+
+  Apps.projectManagement.CreateProjectCommandHandler:
+    class: contexts/projectManagement/application/project/command/CreateProjectCommandHandler
+    arguments: ['@Apps.projectManagement.ProjectRepository']
+    tags:
+      - { name: 'commandHandler' }

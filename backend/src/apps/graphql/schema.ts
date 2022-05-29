@@ -5,7 +5,7 @@ export const typeDefs = gql`
         id: String
         title: String!
         start: String
-        end: String
+        predictedEnd: String
         tasks: [Task!]
     }
     type Task {
@@ -15,5 +15,8 @@ export const typeDefs = gql`
     type Query {
         project(id: String!, withTasks: Boolean): Project
         projects: [Project]
+    }
+    type Mutation {
+        createProject(title: String!, start: String!, predictedEnd: String): Project
     }
 `;

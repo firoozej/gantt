@@ -13,6 +13,7 @@ import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageGraphQL
 import { registerRoutes } from './routes';
 import { typeDefs } from './graphql/schema';
 import { resolvers } from './graphql/resolvers';
+import mongoose from 'mongoose';
 
 export class Server {
     private express: express.Express;
@@ -42,6 +43,7 @@ export class Server {
             res.status(httpStatus.INTERNAL_SERVER_ERROR).send(err.message);
         });
 
+        this.connectDatabase();
         this.startApolloServer(typeDefs, resolvers);
     }
 
@@ -61,6 +63,16 @@ export class Server {
         server.applyMiddleware({ app: this.express });
         await new Promise<void>((resolve) => httpServer.listen({ port: 4001 }, resolve));
         console.log(`🚀 Server ready at http://localhost:4001${server.graphqlPath}`);
+    }
+
+    async connectDatabase() {
+        try {
+            await mongoose.connect(
+                'mongodb+srv://mongo_user:b1H986tlggyzRtmE@cluster0.hwujs39.mongodb.net/ProjectManagement?retryWrites=true&w=majority',
+            );
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     async listen(): Promise<void> {

@@ -4,16 +4,16 @@ import { Task } from './Task';
 export class Project extends AggregateRoot {
     readonly id: string;
     readonly title: string;
-    readonly start: string;
-    readonly end: string;
+    readonly start: Date;
+    readonly predictedEnd: Date;
     readonly tasks: Array<Task>;
 
-    constructor(id: string, title: string, start: string, end: string, tasks: Array<Task>) {
+    constructor(id: string, title: string, start: Date, predictedEnd: Date, tasks: Array<Task>) {
         super();
         this.id = id;
         this.title = title;
         this.start = start;
-        this.end = end;
+        this.predictedEnd = predictedEnd;
         this.tasks = tasks || [];
     }
 }

@@ -1,7 +1,7 @@
 import { Query } from 'contexts/shared/domain/Query';
 import { QueryHandler } from 'contexts/shared/domain/QueryHandler';
-import { ProjectRepository } from '../domain/interface/ProjectRepository';
-import { Project } from '../domain/Project';
+import { ProjectRepository } from 'contexts/projectManagement/domain/interface/ProjectRepository';
+import { Project } from 'contexts/projectManagement/domain/Project';
 import { ProjectResponse } from './ProjectResponse';
 import { ProjectsQuery } from './ProjectsQuery';
 

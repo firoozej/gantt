@@ -1,6 +1,7 @@
 import { ProjectRepository } from 'contexts/projectManagement/domain/interface/ProjectRepository';
 import { Project } from 'contexts/projectManagement/domain/Project';
 import { Nullable } from 'contexts/shared/domain/Nullable';
+import { Project as ProjectModel } from './models/Project';
 
 export class MongoProjectRepository implements ProjectRepository {
     find(id: string, withTasks: boolean): Promise<Nullable<Project>> {
@@ -23,7 +24,9 @@ export class MongoProjectRepository implements ProjectRepository {
         );
         return new Promise((resolve) => resolve([project]));
     }
-    save(project: Project): Promise<void> {
-        throw new Error('Method not implemented.');
+    async save(project: Omit<Project, 'id' | 'tasks'>): Promise<Project> {
+        const newProject = new ProjectModel(project);
+        const result = await newProject.save();
+        return { ...result._doc };
     }
 }
