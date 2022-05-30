@@ -68,7 +68,7 @@ export class Server {
     async connectDatabase() {
         try {
             await mongoose.connect(
-                'mongodb+srv://mongo_user:b1H986tlggyzRtmE@cluster0.hwujs39.mongodb.net/ProjectManagement?retryWrites=true&w=majority',
+                `mongo_url/ProjectManagement?retryWrites=true&w=majority`,
             );
         } catch (e) {
             console.log(e);
