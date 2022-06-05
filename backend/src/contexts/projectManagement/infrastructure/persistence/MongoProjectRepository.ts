@@ -8,8 +8,8 @@ export class MongoProjectRepository implements ProjectRepository {
         const project = new Project(
             '1',
             'test project',
-            '1633638600000',
-            '1633638600000 + 3 * 24 * 60 * 60 * 1000',
+            new Date("2022-06-02 09:10"),
+            new Date("2022-08-02 09:10"),
             [],
         );
         return new Promise((resolve) => resolve(project));
@@ -18,8 +18,8 @@ export class MongoProjectRepository implements ProjectRepository {
         const project = new Project(
             '1',
             'test project',
-            '1633638600000',
-            '1633638600000 + 3 * 24 * 60 * 60 * 1000',
+            new Date("2022-06-02 09:10"),
+            new Date("2022-08-02 09:10"),
             [],
         );
         return new Promise((resolve) => resolve([project]));
@@ -27,6 +27,6 @@ export class MongoProjectRepository implements ProjectRepository {
     async save(project: Omit<Project, 'id' | 'tasks'>): Promise<Project> {
         const newProject = new ProjectModel(project);
         const result = await newProject.save();
-        return { ...result._doc };
+        return {...result._doc, id: result._id.toString()};
     }
 }

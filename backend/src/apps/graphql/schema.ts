@@ -6,7 +6,6 @@ export const typeDefs = gql`
         title: String!
         start: String
         predictedEnd: String
-        tasks: [Task!]
     }
     type Task {
         id: String

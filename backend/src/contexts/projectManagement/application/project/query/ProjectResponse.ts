@@ -13,8 +13,8 @@ export class ProjectResponse extends Response {
         super();
         this.id = project.id;
         this.title = project.title;
-        this.start = project.start;
-        this.predictedEnd = project.predictedEnd;
+        this.start = project.start.toISOString();
+        this.predictedEnd = project.predictedEnd.toISOString();
         this.tasks = project.tasks || [];
     }
 }

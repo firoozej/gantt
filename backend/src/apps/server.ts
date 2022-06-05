@@ -14,6 +14,8 @@ import { registerRoutes } from './routes';
 import { typeDefs } from './graphql/schema';
 import { resolvers } from './graphql/resolvers';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export class Server {
     private express: express.Express;
@@ -67,9 +69,7 @@ export class Server {
 
     async connectDatabase() {
         try {
-            await mongoose.connect(
-                `mongo_url/ProjectManagement?retryWrites=true&w=majority`,
-            );
+            await mongoose.connect(process.env.Mongo_Connect as string);
         } catch (e) {
             console.log(e);
         }

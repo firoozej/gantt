@@ -22,10 +22,10 @@ const ProjectResolvers = {
         },
     },
     Mutation: {
-        createProject: async (title: string, start: string, predictedEnd: string) => {
+        createProject: async (_: any, args: any) => {
             const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
             try {
-                return await projectController.create({title, start, predictedEnd});
+                return await projectController.create(args);
             } catch (e: any) {
                 return new ApolloError(e.message);
             }

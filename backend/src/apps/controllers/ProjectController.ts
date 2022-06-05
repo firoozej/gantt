@@ -34,7 +34,7 @@ export class ProjectController {
     }
     async create(args: any): Promise<ProjectResponse> {
         try {
-            const command = new CreateProjectCommand({ ...args });
+            const command = new CreateProjectCommand(args);
             return await this.commandBus.dispatch(command);
         } catch (e: any) {
             throw new ApplicationError(e.message, httpStatus.INTERNAL_SERVER_ERROR);
