@@ -1,8 +1,9 @@
 import React from "react";
 import { Modal, Form, Input, DatePicker } from "ui-ant";
+import { gql } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { ProjectType } from "types/ProjectType";
-import { gql } from "@apollo/client";
+import { useCreate } from "controllers";
 
 type PropTypes = {
     project?: ProjectType;
@@ -13,11 +14,18 @@ type PropTypes = {
 
 const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose, onSave }) => {
     const { t } = useTranslation();
-    const {data, loading} = useCreat();
     const [form] = Form.useForm();
+    const { create, loading } = useCreate(CREATE_PROJECT);
+
     const handleConfirm = async () => {
         const values = await form.validateFields();
-        
+        create({
+            variables: {
+                title: values.title,
+                start: values.start.toString(),
+                predictedEnd: values.predictedEnd.toString(),
+            },
+        });
         onClose();
     };
 
@@ -26,16 +34,17 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose, onSav
             title={project ? t("Create") : t("Edit")}
             visible={visible}
             onOk={() => form.submit()}
-            onCancel={onClose}>
+            onCancel={onClose}
+            confirmLoading={loading}>
             <Form form={form} onFinish={handleConfirm}>
-                <Form.Item name="title">
-                    <Input />
+                <Form.Item name="title" rules={[{ required: true }]}>
+                    <Input placeholder={t("Title")} />
                 </Form.Item>
-                <Form.Item name="start">
-                    <DatePicker />
+                <Form.Item name="start" rules={[{ required: true }]}>
+                    <DatePicker placeholder={t("Start")} />
                 </Form.Item>
                 <Form.Item name="predictedEnd">
-                    <DatePicker />
+                    <DatePicker placeholder={t("Predicted End")} />
                 </Form.Item>
             </Form>
         </Modal>
@@ -45,10 +54,9 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose, onSav
 export default CreateEditModal;
 
 const CREATE_PROJECT = gql`
-  mutation AddTodo($type: String!) {
-    addTodo(type: $type) {
-      id
-      type
+    mutation createProject($title: String!, $start: String!, $predictedEnd: String) {
+        createProject(title: $title, start: $start, predictedEnd: $predictedEnd) {
+            id
+        }
     }
-  }
 `;

@@ -8,8 +8,8 @@ export class MongoProjectRepository implements ProjectRepository {
         const project = new Project(
             '1',
             'test project',
-            new Date("2022-06-02 09:10"),
-            new Date("2022-08-02 09:10"),
+            new Date('2022-06-02 09:10'),
+            new Date('2022-08-02 09:10'),
             [],
         );
         return new Promise((resolve) => resolve(project));
@@ -18,15 +18,16 @@ export class MongoProjectRepository implements ProjectRepository {
         const project = new Project(
             '1',
             'test project',
-            new Date("2022-06-02 09:10"),
-            new Date("2022-08-02 09:10"),
+            new Date('2022-06-02 09:10'),
+            new Date('2022-08-02 09:10'),
             [],
         );
         return new Promise((resolve) => resolve([project]));
     }
     async save(project: Omit<Project, 'id' | 'tasks'>): Promise<Project> {
         const newProject = new ProjectModel(project);
+
         const result = await newProject.save();
-        return {...result._doc, id: result._id.toString()};
+        return { ...result._doc, id: result._id.toString() };
     }
 }

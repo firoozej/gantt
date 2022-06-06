@@ -10,6 +10,7 @@ import TranslationProvider from "./translation/translationProvider";
 import { resources } from "translation/resources";
 import { initialGanttData } from "test";
 import ProjectOverview from "components/project/overview";
+import { message } from "ui-ant";
 
 const App: React.FC = () => {
     const data = { ...initialGanttData };
@@ -27,14 +28,15 @@ const App: React.FC = () => {
     });
 
     const errorLink = onError(({ graphQLErrors, networkError }) => {
+        let errorMessage = "";
         if (graphQLErrors)
-            graphQLErrors.forEach(({ message, locations, path }) =>
-                console.log(
-                    `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-                )
+            graphQLErrors.forEach(
+                ({ message, locations, path }) =>
+                    (errorMessage += `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
             );
 
-        if (networkError) console.log(`[Network error]: ${networkError}`);
+        if (networkError) errorMessage = `[Network error]: ${networkError}`;
+        message.error(errorMessage)
     });
 
     const client = new ApolloClient({
