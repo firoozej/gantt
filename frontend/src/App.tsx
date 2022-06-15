@@ -11,6 +11,7 @@ import { resources } from "translation/resources";
 import { initialGanttData } from "test";
 import ProjectOverview from "components/project/overview";
 import { message } from "ui-ant";
+import Labels from "components/labels/Labels";
 
 const App: React.FC = () => {
     const data = { ...initialGanttData };
@@ -51,6 +52,7 @@ const App: React.FC = () => {
                     <Router>
                         <Routes>
                             <Route path="/projects" element={<ProjectOverview />} />
+                            <Route path="/labels" element={<Labels />} />
                             <Route
                                 path="/"
                                 element={
