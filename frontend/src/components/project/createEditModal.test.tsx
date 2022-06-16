@@ -6,7 +6,7 @@ import CreateEditModal from "./createEditModal";
 describe("Create Project: <CreateEditModal />", () => {
     it("should call onSave with correct data", async () => {
         const spy = jest.fn();
-        const { findByText } = renderComponent({
+        const { findByLabelText, findByText } = renderComponent({
             component: <CreateEditModal visible={true} onClose={jest.fn()} onSave={spy} />,
             mocks: [
                 {
@@ -32,9 +32,9 @@ describe("Create Project: <CreateEditModal />", () => {
             ],
         });
 
-        fireEvent.change(await findByText("Title"), { target: { value: "project1" } });
-        fireEvent.change(await findByText("Start"), { target: { value: "2022-01-01" } });
-        fireEvent.change(await findByText("Title"), { target: { value: "2022-06-01" } });
+        fireEvent.change(await findByLabelText("Title"), { target: { value: "project1" } });
+        fireEvent.change(await findByLabelText("Start"), { target: { value: "2022-01-01" } });
+        fireEvent.change(await findByLabelText("Predicted End"), { target: { value: "2022-06-01" } });
         fireEvent.click(await findByText("OK"));
         expect(spy).toHaveBeenCalledWith({ id: "1", title: "project1" });
     });
