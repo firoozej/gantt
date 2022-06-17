@@ -7,9 +7,9 @@ describe("<ganttChart />", () => {
 
     it("should indent tasks", async () => {
         const spy = jest.fn();
-        const { findByText, getByLabelText, queryByText } = renderComponent(
-            <GanttChart data={data} onTaskEdit={spy} />
-        );
+        const { findByText, getByLabelText, queryByText } = renderComponent({
+            component: <GanttChart data={data} onTaskEdit={spy} />,
+        });
         fireEvent.click(await findByText("task3"));
         fireEvent.click(await findByText("task7"));
 
@@ -20,7 +20,7 @@ describe("<ganttChart />", () => {
         const task3 = queryByText("task7");
         expect(task2).toBeNull();
         expect(task3).toBeNull();
-        
+
         fireEvent.click(getByLabelText("expand task2"));
         expect(task2).not.toBeNull();
         expect(task3).not.toBeNull();

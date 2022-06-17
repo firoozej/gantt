@@ -14,18 +14,19 @@ type PropTypes = {
 const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose, onSave }) => {
     const { t } = useTranslation();
     const [form] = Form.useForm();
-    const { create, loading } = useCreate(CREATE_PROJECT, "projects");
+    const { create, loading, data } = useCreate(CREATE_PROJECT, "createProject");
 
     const handleConfirm = async () => {
         const values = await form.validateFields();
-        const project = await create({
+        await create({
             variables: {
                 title: values.title,
-                start: values.start.toString(),
-                predictedEnd: values.predictedEnd.toString(),
+                start: values.start.format('YYYY-MM-DD'),
+                ...(values.predictedEnd && { predictedEnd: values.predictedEnd.format('YYYY-MM-DD') }),
             },
         });
-        onSave(project as ProjectType);
+        console.log(data);
+        onSave(data as ProjectType);
         onClose();
     };
 
@@ -34,17 +35,18 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose, onSav
             title={project ? t("Create") : t("Edit")}
             visible={visible}
             onOk={() => form.submit()}
+            okButtonProps={{ "aria-label": "ok" }}
             onCancel={onClose}
             confirmLoading={loading}>
             <Form form={form} onFinish={handleConfirm}>
                 <Form.Item label={t("Title")} name="title" rules={[{ required: true }]}>
-                    <Input aria-labelledby={t("Title")}/>
+                    <Input aria-label={t("Title")} />
                 </Form.Item>
                 <Form.Item label={t("Start")} name="start" rules={[{ required: true }]}>
-                    <DatePicker aria-labelledby={t("Start")} />
+                    <DatePicker aria-label={t("Start")} />
                 </Form.Item>
                 <Form.Item label={t("Predicted End")} name="predictedEnd">
-                    <DatePicker aria-labelledby={t("Predicted End")} />
+                    <DatePicker aria-label={t("Predicted End")} />
                 </Form.Item>
             </Form>
         </Modal>
@@ -52,4 +54,3 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose, onSav
 };
 
 export default CreateEditModal;
-
