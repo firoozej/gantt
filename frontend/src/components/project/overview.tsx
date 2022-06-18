@@ -2,25 +2,30 @@ import React, { FunctionComponent, useState } from "react";
 import { gql } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Grid, Button } from "ui-ant";
-import { useOverview } from "data";
+import { PROJECTS_QUERY, useOverview } from "data";
 import { PlusOutlined } from "@ant-design/icons";
 import CreateEditModal from "./createEditModal";
+import { ProjectType } from "types/ProjectType";
 
 type PropTypes = {};
 
 const Overview: FunctionComponent<PropTypes> = () => {
     const { t } = useTranslation();
-    const [createEditModal, setCreateEditModal] = useState({ visible: false });
+
+    const [createEditModal, setCreateEditModal] = useState<{
+        visible: boolean;
+        project: ProjectType | undefined;
+    }>({ visible: false, project: undefined });
 
     const handleCreate = () => {
-        setCreateEditModal({ visible: true });
+        setCreateEditModal({ visible: true, project: undefined });
+    };
+    const handleOnRow = (project: ProjectType) => {
+        return {
+            onClick: () => setCreateEditModal({ visible: true, project }),
+        };
     };
     const columns = [
-        {
-            title: t("Id"),
-            dataIndex: "id",
-            key: "id",
-        },
         {
             title: t("Title"),
             dataIndex: "title",
@@ -47,25 +52,14 @@ const Overview: FunctionComponent<PropTypes> = () => {
                     </Button>
                 )}
                 useData={useOverview.bind(null, PROJECTS_QUERY, "projects")}
+                onRow={handleOnRow}
             />
             <CreateEditModal
-                visible={createEditModal.visible}
-                onClose={() => setCreateEditModal({ visible: false })}
-                onSave={() => {}}
+                {...createEditModal}
+                onClose={() => setCreateEditModal({ visible: false, project: undefined })}
             />
         </>
     );
 };
-
-const PROJECTS_QUERY = gql`
-    query {
-        projects {
-            id
-            title
-            start
-            predictedEnd
-        }
-    }
-`;
 
 export default Overview;

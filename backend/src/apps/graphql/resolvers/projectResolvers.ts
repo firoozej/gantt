@@ -30,6 +30,14 @@ const ProjectResolvers = {
                 return new ApolloError(e.message);
             }
         },
+        updateProject: async (_: any, args: any) => {
+            const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
+            try {
+                return await projectController.update(args);
+            } catch (e: any) {
+                return new ApolloError(e.message);
+            }
+        },
     },
 };
 

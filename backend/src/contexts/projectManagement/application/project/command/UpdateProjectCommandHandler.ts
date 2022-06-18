@@ -2,17 +2,18 @@ import { ProjectRepository } from 'contexts/projectManagement/domain/interface/P
 import { Command } from 'contexts/shared/domain/Command';
 import { CommandHandler } from 'contexts/shared/domain/CommandHandler';
 import { ProjectResponse } from '../query/ProjectResponse';
-import { CreateProjectCommand } from './CreateProjectCommand';
+import { UpdateProjectCommand } from './UpdateProjectCommand';
 
-export class CreateProjectCommandHandler implements CommandHandler<CreateProjectCommand> {
+export class UpdateProjectCommandHandler implements CommandHandler<UpdateProjectCommand> {
     constructor(private projectRepository: ProjectRepository) {}
 
     subscribedTo(): Command {
-        return CreateProjectCommand;
+        return UpdateProjectCommand;
     }
 
-    async handle(command: CreateProjectCommand): Promise<ProjectResponse> {
-        const project = await this.projectRepository.save({
+    async handle(command: UpdateProjectCommand): Promise<ProjectResponse> {
+        const project = await this.projectRepository.update({
+            id: command.id,
             title: command.title,
             start: new Date(command.start),
             predictedEnd: command.predictedEnd ? new Date(command.predictedEnd) : null,

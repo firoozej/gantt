@@ -8,6 +8,7 @@ import { ProjectsQuery } from 'contexts/projectManagement/application/project/qu
 import { ProjectRequest } from 'contexts/projectManagement/application/project/query/ProjectReuest';
 import { CommandBus } from 'contexts/shared/domain/CommandBus';
 import { CreateProjectCommand } from 'contexts/projectManagement/application/project/command/CreateProjectCommand';
+import { UpdateProjectCommand } from 'contexts/projectManagement/application/project/command/UpdateProjectCommand';
 
 export class ProjectController {
     constructor(private queryBus: QueryBus, private commandBus: CommandBus) {}
@@ -35,6 +36,14 @@ export class ProjectController {
     async create(args: any): Promise<ProjectResponse> {
         try {
             const command = new CreateProjectCommand(args);
+            return await this.commandBus.dispatch(command);
+        } catch (e: any) {
+            throw new ApplicationError(e.message, httpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    async update(args: any): Promise<ProjectResponse> {
+        try {
+            const command = new UpdateProjectCommand(args);
             return await this.commandBus.dispatch(command);
         } catch (e: any) {
             throw new ApplicationError(e.message, httpStatus.INTERNAL_SERVER_ERROR);

@@ -23,3 +23,9 @@ services:
     arguments: ['@Apps.projectManagement.ProjectRepository']
     tags:
       - { name: 'commandHandler' }
+  
+  Apps.projectManagement.UpdateProjectCommandHandler:
+    class: contexts/projectManagement/application/project/command/UpdateProjectCommandHandler
+    arguments: ['@Apps.projectManagement.ProjectRepository']
+    tags:
+      - { name: 'commandHandler' }

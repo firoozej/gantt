@@ -17,5 +17,6 @@ export const typeDefs = gql`
     }
     type Mutation {
         createProject(title: String!, start: String!, predictedEnd: String): Project
+        updateProject(id: String!, title: String!, start: String!, predictedEnd: String): Project
     }
 `;

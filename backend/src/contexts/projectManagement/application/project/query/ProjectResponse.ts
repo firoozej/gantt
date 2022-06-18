@@ -6,7 +6,7 @@ export class ProjectResponse extends Response {
     readonly id: string;
     readonly title: string;
     readonly start: string;
-    readonly predictedEnd: string;
+    readonly predictedEnd: string | null;
     readonly tasks: Array<Task>;
 
     constructor(project: Project) {
@@ -14,7 +14,7 @@ export class ProjectResponse extends Response {
         this.id = project.id;
         this.title = project.title;
         this.start = project.start.toISOString();
-        this.predictedEnd = project.predictedEnd.toISOString();
+        this.predictedEnd = project.predictedEnd ? project.predictedEnd.toISOString() : null;
         this.tasks = project.tasks || [];
     }
 }
