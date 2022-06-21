@@ -27,4 +27,8 @@ export class MongoProjectRepository implements ProjectRepository {
         const result = await ProjectModel.findByIdAndUpdate(project.id, project, {new: true});
         return { ...result._doc, id: result._id.toString() };
     }
+    async count(): Promise<number> {
+        const result = await ProjectModel.countDocuments({});
+        return result;
+    }
 }

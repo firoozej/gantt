@@ -11,8 +11,7 @@ import { ApolloServerPluginDrainHttpServer, ApolloServerPluginLandingPageGraphQL
 //import Logger from "../../../Contexts/Shared/domain/Logger";
 //import container from "./dependency-injection";
 import { registerRoutes } from './routes';
-import { typeDefs } from './graphql/schema';
-import { resolvers } from './graphql/resolvers';
+import { schema } from './graphql/schema';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -46,14 +45,13 @@ export class Server {
         });
 
         this.connectDatabase();
-        this.startApolloServer(typeDefs, resolvers);
+        this.startApolloServer(schema);
     }
 
-    async startApolloServer(typeDefs: any, resolvers: any) {
+    async startApolloServer(schema: any) {
         const httpServer = http.createServer(this.express);
         const server = new ApolloServer({
-            typeDefs,
-            resolvers,
+            schema,
             csrfPrevention: true,
             plugins: [
                 ApolloServerPluginDrainHttpServer({ httpServer }),

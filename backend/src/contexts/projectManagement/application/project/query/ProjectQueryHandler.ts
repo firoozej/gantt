@@ -3,7 +3,7 @@ import { QueryHandler } from 'contexts/shared/domain/QueryHandler';
 import { ResourceNotExistError } from 'contexts/shared/domain/ResourceNotExistError';
 import { ProjectRepository } from 'contexts/projectManagement/domain/interface/ProjectRepository';
 import { ProjectQuery } from './ProjectQuery';
-import { ProjectResponse } from './ProjectResponse';
+import { ProjectResponse } from '../ProjectResponse';
 
 export class ProjectQueryHandler implements QueryHandler<ProjectQuery, ProjectResponse> {
     constructor(private projectRepository: ProjectRepository) {}

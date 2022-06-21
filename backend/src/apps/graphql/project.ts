@@ -2,7 +2,36 @@ import { ApolloError } from 'apollo-server-express';
 import container from 'apps/dependency-injection';
 import { ProjectRequest } from 'contexts/projectManagement/application/project/query/ProjectReuest';
 
-const ProjectResolvers = {
+export const typeDef = `
+    type Project {
+        id: String
+        title: String!
+        start: String
+        predictedEnd: String
+    }
+
+    type Task {
+        id: String
+        title: String
+    }
+
+    type ProjectOverview implements Overview {
+        total: Int!
+        data: [Project]
+    }
+
+    extend type Query {
+        project(id: String!, withTasks: Boolean): Project
+        projects(pagination: Pagination!): ProjectOverview
+    } 
+    extend type Mutation {
+        createProject(title: String!, start: String!, predictedEnd: String): Project
+        updateProject(id: String!, title: String!, start: String!, predictedEnd: String): Project
+    }
+       
+`;
+
+export const resolvers = {
     Query: {
         project: async (id: string, withTasks: boolean) => {
             const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
@@ -40,5 +69,3 @@ const ProjectResolvers = {
         },
     },
 };
-
-export default ProjectResolvers;

@@ -1,22 +1,21 @@
-import { gql } from 'apollo-server-express';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { typeDef as Project, resolvers as projectResolvers } from './project';
 
-export const typeDefs = gql`
-    type Project {
-        id: String
-        title: String!
-        start: String
-        predictedEnd: String
+const SharedType = `
+    type Query
+    type Mutation
+    input Pagination {
+        pageSize: Int
+        pageNumber: Int
     }
-    type Task {
-        id: String
-        title: String
-    }
-    type Query {
-        project(id: String!, withTasks: Boolean): Project
-        projects: [Project]
-    }
-    type Mutation {
-        createProject(title: String!, start: String!, predictedEnd: String): Project
-        updateProject(id: String!, title: String!, start: String!, predictedEnd: String): Project
+    interface Overview {
+        total: Int!
     }
 `;
+
+const schema = makeExecutableSchema({
+    typeDefs: [SharedType, Project],
+    resolvers: [{ ...projectResolvers }],
+});
+
+export { schema };

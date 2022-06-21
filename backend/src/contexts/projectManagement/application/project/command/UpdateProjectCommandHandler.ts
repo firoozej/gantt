@@ -1,7 +1,7 @@
 import { ProjectRepository } from 'contexts/projectManagement/domain/interface/ProjectRepository';
 import { Command } from 'contexts/shared/domain/Command';
 import { CommandHandler } from 'contexts/shared/domain/CommandHandler';
-import { ProjectResponse } from '../query/ProjectResponse';
+import { ProjectResponse } from '../ProjectResponse';
 import { UpdateProjectCommand } from './UpdateProjectCommand';
 
 export class UpdateProjectCommandHandler implements CommandHandler<UpdateProjectCommand> {

@@ -6,4 +6,5 @@ export interface ProjectRepository {
     findAll(): Promise<Array<Project>>;
     save(project: Omit<Project, 'id' | 'tasks'>): Promise<Project>;
     update(project: Omit<Project, 'tasks'>): Promise<Project>;
+    count(): Promise<number>;
 }
