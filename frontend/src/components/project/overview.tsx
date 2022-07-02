@@ -1,12 +1,10 @@
 import React, { FunctionComponent, useState } from "react";
-import { gql } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 import { Grid, Button } from "ui-ant";
 import { PROJECTS_QUERY, useOverview } from "data";
 import { PlusOutlined } from "@ant-design/icons";
 import CreateEditModal from "./createEditModal";
 import { ProjectType } from "types/ProjectType";
-import moment from "moment";
 import { formatDate } from "utils";
 
 type PropTypes = {};
