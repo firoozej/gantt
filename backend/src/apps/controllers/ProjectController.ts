@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { QueryBus } from 'contexts/shared/domain/QueryBus';
 import { ProjectQuery } from 'contexts/projectManagement/application/project/query/ProjectQuery';
-import { ProjectResponse } from 'contexts/projectManagement/application/project/query/ProjectResponse';
+import { ProjectResponse } from 'contexts/projectManagement/application/project/ProjectResponse';
 import { ResourceNotExistError } from 'contexts/shared/domain/ResourceNotExistError';
 import { ApplicationError } from 'apps/ApplicationError';
 import { ProjectsQuery } from 'contexts/projectManagement/application/project/query/ProjectsQuery';
@@ -9,7 +9,7 @@ import { ProjectRequest } from 'contexts/projectManagement/application/project/q
 import { CommandBus } from 'contexts/shared/domain/CommandBus';
 import { CreateProjectCommand } from 'contexts/projectManagement/application/project/command/CreateProjectCommand';
 import { UpdateProjectCommand } from 'contexts/projectManagement/application/project/command/UpdateProjectCommand';
-import { ProjectOverviewResponse } from 'contexts/projectManagement/application/project/query/ProjectOverviewResponse';
+import { ProjectOverviewResponse } from 'contexts/projectManagement/application/project/ProjectOverviewResponse';
 
 export class ProjectController {
     constructor(private queryBus: QueryBus, private commandBus: CommandBus) {}

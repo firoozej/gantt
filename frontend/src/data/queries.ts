@@ -23,12 +23,15 @@ const UPDATE_PROJECT = gql`
 `;
 
 const PROJECTS_QUERY = gql`
-    query {
-        projects {
-            id
-            title
-            start
-            predictedEnd
+    query ($pagination: Pagination!) {
+        projects(pagination: $pagination) {
+            total
+            data {
+                id
+                title
+                start
+                predictedEnd
+            } 
         }
     }
 `;

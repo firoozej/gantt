@@ -15,7 +15,7 @@ export class MongoProjectRepository implements ProjectRepository {
         return new Promise((resolve) => resolve(project));
     }
     async findAll(): Promise<Array<Project>> {
-        return await ProjectModel.find();
+        return await ProjectModel.find().sort({createdAt: 'desc'});
     }
     async save(project: Omit<Project, 'id' | 'tasks'>): Promise<Project> {
         const newProject = new ProjectModel(project);

@@ -1,0 +1,5 @@
+import moment from "moment";
+
+export const formatDate = (isoDate: string, format: string = "YYYY-mm-DD") => {
+    return moment(isoDate).isValid() ? moment(isoDate).format(format) : null;
+};

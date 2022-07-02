@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema({
     predictedEnd: {
         type: Date,
     },
-});
+}, { timestamps: true });
 
 const Project = mongoose.model('Project', projectSchema);
 export { Project };

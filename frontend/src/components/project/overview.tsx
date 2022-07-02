@@ -6,6 +6,8 @@ import { PROJECTS_QUERY, useOverview } from "data";
 import { PlusOutlined } from "@ant-design/icons";
 import CreateEditModal from "./createEditModal";
 import { ProjectType } from "types/ProjectType";
+import moment from "moment";
+import { formatDate } from "utils";
 
 type PropTypes = {};
 
@@ -35,11 +37,13 @@ const Overview: FunctionComponent<PropTypes> = () => {
             title: t("Start"),
             dataIndex: "start",
             key: "start",
+            render: (value: string) => formatDate(value),
         },
         {
             title: t("Predicted End"),
             dataIndex: "predictedEnd",
             key: "predictedEnd",
+            render: (value: string) => formatDate(value),
         },
     ];
     return (
@@ -47,7 +51,7 @@ const Overview: FunctionComponent<PropTypes> = () => {
             <Grid
                 columns={columns}
                 title={() => (
-                    <Button onClick={handleCreate}>
+                    <Button onClick={handleCreate} data-test="create-project">
                         <PlusOutlined />
                     </Button>
                 )}
