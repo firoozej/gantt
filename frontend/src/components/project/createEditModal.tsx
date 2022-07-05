@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { Modal, Form, Input, DatePicker } from "ui-ant";
+import React, { useRef } from "react";
+import { DraggableDialog, Form, TextInput, submitForm, DateInput } from "ui-materialui";
 import { useTranslation } from "react-i18next";
-import moment from "moment";
 import { gql } from "@apollo/client";
+import Stack from "@mui/material/Stack";
 import { ProjectType } from "types/ProjectType";
 import { useCreate, CREATE_PROJECT, useUpdate, UPDATE_PROJECT } from "data";
 
@@ -14,7 +14,7 @@ type PropTypes = {
 
 const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => {
     const { t } = useTranslation();
-    const [form] = Form.useForm();
+    const formRef = useRef<HTMLFormElement>();
 
     const updateCache = (cache: any, { data }: any) => {
         cache.modify({
@@ -47,22 +47,16 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
         nameSpace: "updateProject",
     });
 
-    useEffect(() => {
-        if (visible) {
-            form.resetFields();
-        }
-    }, [visible, form]);
-
-    const handleConfirm = async () => {
-        const values = await form.validateFields();
+    const handleConfirm = async (values: any) => {
+        console.log(values);
         const variables = {
             ...(project && {
                 id: project.id,
             }),
             title: values.title,
-            start: values.startDate.format("YYYY-MM-DD"),
+            start: values.startDate.toString(),
             ...(values.predictedEnd && {
-                predictedEnd: values.predictedEnd.format("YYYY-MM-DD"),
+                predictedEnd: values.predictedEnd.toString(),
             }),
         };
         project
@@ -72,60 +66,73 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
               });
         onClose();
     };
-
     return (
-        <Modal
-            title={project ? t("Create") : t("Edit")}
-            visible={visible}
-            onOk={() => form.submit()}
-            okButtonProps={{ "aria-label": "ok" }}
-            onCancel={onClose}
+        <DraggableDialog
+            title={project === undefined ? t("Create") : t("Edit")}
+            open={visible}
+            onOk={() => submitForm(formRef)}
+            okButtonProps={{
+                "aria-label": "ok",
+            }}
+            onClose={onClose}
             confirmLoading={createLoading || updateLoading}>
             <Form
-                form={form}
-                onFinish={handleConfirm}
-                labelCol={{ span: 5 }}
-                wrapperCol={{ span: 19 }}
-                layout="horizontal">
-                <Form.Item
-                    label={t("Title")}
-                    name="title"
-                    initialValue={project ? project.title : undefined}
-                    rules={[{ required: true, message: t("{{name}} is required", {name: t("Title")}) }]}>
-                    <Input aria-label={t("Title")} />
-                </Form.Item>
-                <Form.Item
-                    label={t("Start Date")}
-                    name="startDate"
-                    initialValue={project ? moment(project.start) : undefined}
-                    rules={[{ required: true, message: t("{{name}} is required", {name: t("Start Date")}) }]}>
-                    <DatePicker aria-label={t("Start Date")} />
-                </Form.Item>
-                <Form.Item
-                    label={t("Predicted End")}
-                    name="predictedEnd"
-                    initialValue={
-                        project && project.predictedEnd ? moment(project.predictedEnd) : undefined
-                    }
-                    dependencies={["start"]}
-                    rules={[
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (value && value < getFieldValue("start")) {
-                                    return Promise.reject(
-                                        new Error(
-                                            t("Predicated End should be after Start Date")
-                                        )
-                                    );
-                                }
-                                return Promise.resolve();
+                onSubmit={handleConfirm}
+                defaultValues={
+                    project
+                        ? {
+                              title: project.title,
+                              startDate: new Date(project.start),
+                              predictedEnd: project.predictedEnd
+                                  ? new Date(project.predictedEnd)
+                                  : null,
+                          }
+                        : { title: "", startDate: null, predictedEnd: null }
+                }
+                formRef={formRef}>
+                <Stack>
+                    <TextInput
+                        name="title"
+                        label={t("Title")}
+                        aria-label={t("Title")}
+                        rules={{
+                            required: {
+                                value: true,
+                                message: t("{{name}} is required", { name: t("Title") }),
                             },
-                        }),
-                    ]}>
-                    <DatePicker aria-label={t("Predicted End")} />
-                </Form.Item>
+                        }}
+                    />
+                    <DateInput
+                        name="startDate"
+                        label={t("Start Date")}
+                        aria-label={t("Start Date")}
+                        rules={{
+                            required: {
+                                value: true,
+                                message: t("{{name}} is required", { name: t("Start Date") }),
+                            },
+                        }}
+                    />
+                    <DateInput
+                        name="predictedEnd"
+                        label={t("Predicted End")}
+                        aria-label={t("Predicted End")}
+                        rules={{
+                            validate: (getValues: Function) => {
+                                console.log(getValues("predictedEnd"));
+                                if (
+                                    getValues("predictedEnd") &&
+                                    getValues("predictedEnd") < getValues("startDate")
+                                ) {
+                                    return t("Predicated End should be after Start Date");
+                                }
+                                return true;
+                            },
+                        }}
+                    />
+                </Stack>
             </Form>
-        </Modal>
+        </DraggableDialog>
     );
 };
 

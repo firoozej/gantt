@@ -5,12 +5,14 @@ import "antd/dist/antd.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
+import { message } from "ui-ant";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Gantt from "./components/gantt/ganttChart";
 import TranslationProvider from "./translation/translationProvider";
 import { resources } from "translation/resources";
 import { initialGanttData } from "test";
 import ProjectOverview from "components/project/overview";
-import { message } from "ui-ant";
 
 const App: React.FC = () => {
     const data = { ...initialGanttData };
@@ -36,7 +38,7 @@ const App: React.FC = () => {
             );
 
         if (networkError) errorMessage = `[Network error]: ${networkError}`;
-        message.error(errorMessage)
+        message.error(errorMessage);
     });
 
     const client = new ApolloClient({
@@ -48,22 +50,24 @@ const App: React.FC = () => {
         <div style={{ width: "95%", margin: "20px auto" }}>
             <TranslationProvider local="en-GB">
                 <ApolloProvider client={client}>
-                    <Router>
-                        <Routes>
-                            <Route path="/projects" element={<ProjectOverview />} />
-                            <Route
-                                path="/"
-                                element={
-                                    <Gantt
-                                        data={data}
-                                        onTaskEdit={() => {
-                                            console.log("yes");
-                                        }}
-                                    />
-                                }
-                            />
-                        </Routes>
-                    </Router>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <Router>
+                            <Routes>
+                                <Route path="/projects" element={<ProjectOverview />} />
+                                <Route
+                                    path="/"
+                                    element={
+                                        <Gantt
+                                            data={data}
+                                            onTaskEdit={() => {
+                                                console.log("yes");
+                                            }}
+                                        />
+                                    }
+                                />
+                            </Routes>
+                        </Router>
+                    </LocalizationProvider>
                 </ApolloProvider>
             </TranslationProvider>
         </div>
