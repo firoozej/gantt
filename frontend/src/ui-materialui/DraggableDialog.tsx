@@ -47,9 +47,7 @@ const DraggableDialog: React.FC<PropTypes> = ({
                 <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
                     {title}
                 </DialogTitle>
-                <DialogContent>
-                    <DialogContentText>{children}</DialogContentText>
-                </DialogContent>
+                <DialogContent>{children}</DialogContent>
                 <DialogActions>
                     <Button onClick={() => onClose()}>{t("Cancel")}</Button>
                     <LoadingButton
@@ -57,6 +55,7 @@ const DraggableDialog: React.FC<PropTypes> = ({
                         loading={confirmLoading}
                         size="small"
                         variant="contained"
+                        aria-label="ok"
                         {...okButtonProps}>
                         {t("OK")}
                     </LoadingButton>

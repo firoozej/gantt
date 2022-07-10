@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { DraggableDialog, Form, TextInput, submitForm, DateInput } from "ui-materialui";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 import { gql } from "@apollo/client";
 import Stack from "@mui/material/Stack";
 import { ProjectType } from "types/ProjectType";
@@ -48,15 +49,14 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
     });
 
     const handleConfirm = async (values: any) => {
-        console.log(values);
         const variables = {
             ...(project && {
                 id: project.id,
             }),
             title: values.title,
-            start: values.startDate.toString(),
+            start: values.startDate.format("yyyy-MM-DD"),
             ...(values.predictedEnd && {
-                predictedEnd: values.predictedEnd.toString(),
+                predictedEnd: values.predictedEnd.format("yyyy-MM-DD"),
             }),
         };
         project
@@ -71,20 +71,18 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
             title={project === undefined ? t("Create") : t("Edit")}
             open={visible}
             onOk={() => submitForm(formRef)}
-            okButtonProps={{
-                "aria-label": "ok",
-            }}
             onClose={onClose}
-            confirmLoading={createLoading || updateLoading}>
+            confirmLoading={createLoading || updateLoading}
+            >
             <Form
                 onSubmit={handleConfirm}
                 defaultValues={
                     project
                         ? {
                               title: project.title,
-                              startDate: new Date(project.start),
+                              startDate: moment(project.start),
                               predictedEnd: project.predictedEnd
-                                  ? new Date(project.predictedEnd)
+                                  ? moment(project.predictedEnd)
                                   : null,
                           }
                         : { title: "", startDate: null, predictedEnd: null }
@@ -94,7 +92,6 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                     <TextInput
                         name="title"
                         label={t("Title")}
-                        aria-label={t("Title")}
                         rules={{
                             required: {
                                 value: true,
@@ -105,7 +102,6 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                     <DateInput
                         name="startDate"
                         label={t("Start Date")}
-                        aria-label={t("Start Date")}
                         rules={{
                             required: {
                                 value: true,
@@ -116,10 +112,8 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                     <DateInput
                         name="predictedEnd"
                         label={t("Predicted End")}
-                        aria-label={t("Predicted End")}
                         rules={{
                             validate: (getValues: Function) => {
-                                console.log(getValues("predictedEnd"));
                                 if (
                                     getValues("predictedEnd") &&
                                     getValues("predictedEnd") < getValues("startDate")

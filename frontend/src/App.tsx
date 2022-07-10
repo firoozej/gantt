@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { message } from "ui-ant";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Gantt from "./components/gantt/ganttChart";
 import TranslationProvider from "./translation/translationProvider";
@@ -50,7 +50,7 @@ const App: React.FC = () => {
         <div style={{ width: "95%", margin: "20px auto" }}>
             <TranslationProvider local="en-GB">
                 <ApolloProvider client={client}>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <LocalizationProvider dateAdapter={AdapterMoment}>
                         <Router>
                             <Routes>
                                 <Route path="/projects" element={<ProjectOverview />} />

@@ -2,6 +2,8 @@ import { MockedProvider } from "@apollo/client/testing";
 import { render } from "@testing-library/react";
 import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import TranslationProvider from "translation/translationProvider";
 
 export function renderComponent({ component, options = {}, mocks = [] }) {
@@ -12,10 +14,13 @@ export function renderComponent({ component, options = {}, mocks = [] }) {
             escapeValue: false,
         },
     });
+    
     const renderResult = render(
         <TranslationProvider local="en-GB">
             <MockedProvider mocks={mocks} addTypename={false}>
-                {component}
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    {component}
+                </LocalizationProvider>
             </MockedProvider>
         </TranslationProvider>,
         options

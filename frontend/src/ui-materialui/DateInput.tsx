@@ -1,6 +1,6 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import FormControl from "@mui/material/FormControl";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -13,7 +13,7 @@ const DateInput: React.FC<PropTypes> = ({ rules, name, ...rest }) => {
     } = useFormContext();
 
     return (
-        <FormControl  margin="dense">
+        <FormControl margin="dense">
             <Controller
                 name={name}
                 control={control}
@@ -22,18 +22,16 @@ const DateInput: React.FC<PropTypes> = ({ rules, name, ...rest }) => {
                     validate: rules.validate ? rules.validate.bind(null, getValues) : undefined,
                 }}
                 render={({ field }) => (
-                    <DesktopDatePicker
+                    <MobileDatePicker
                         className="ui-forminput"
-                        inputFormat="yyyy-MM-dd"
+                        inputFormat="yyyy-MM-DD"
                         {...rest}
                         {...field}
-                        renderInput={params => (
-                            <TextField size="small" {...params} />
-                        )}
+                        renderInput={params => <TextField size="small" {...params} />}
                     />
                 )}
             />
-            {errors && errors[name] && <p>{errors[name]?.message}</p>}
+            {errors && errors[name] && <div>{errors[name]?.message}</div>}
         </FormControl>
     );
 };
