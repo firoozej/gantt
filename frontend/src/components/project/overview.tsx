@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Grid, Button } from "ui-ant";
+import { Grid } from "ui-materialui";
 import { PROJECTS_QUERY, useOverview } from "data";
-import { PlusOutlined } from "@ant-design/icons";
 import CreateEditModal from "./createEditModal";
 import { ProjectType } from "types/ProjectType";
 import { formatDate } from "utils";
+import IconButton from "@mui/material/IconButton";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 type PropTypes = {};
 
@@ -29,18 +30,15 @@ const Overview: FunctionComponent<PropTypes> = () => {
         {
             title: t("Title"),
             dataIndex: "title",
-            key: "title",
         },
         {
             title: t("Start"),
             dataIndex: "start",
-            key: "start",
             render: (value: string) => formatDate(value),
         },
         {
             title: t("Predicted End"),
             dataIndex: "predictedEnd",
-            key: "predictedEnd",
             render: (value: string) => formatDate(value),
         },
     ];
@@ -48,13 +46,13 @@ const Overview: FunctionComponent<PropTypes> = () => {
         <>
             <Grid
                 columns={columns}
-                title={() => (
-                    <Button onClick={handleCreate} data-test="create-project">
-                        <PlusOutlined />
-                    </Button>
-                )}
+                title={
+                    <IconButton onClick={handleCreate} size="large" color="primary">
+                        <AddBoxIcon />
+                    </IconButton>
+                }
                 useData={useOverview.bind(null, PROJECTS_QUERY, "projects")}
-                onRow={handleOnRow}
+                //onRow={handleOnRow}
             />
             <CreateEditModal
                 {...createEditModal}
