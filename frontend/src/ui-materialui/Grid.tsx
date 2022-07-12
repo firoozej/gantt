@@ -18,8 +18,10 @@ import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
+import LinearProgress from "@mui/material/LinearProgress";
 
 interface Data {
     [key: string]: string | number;
@@ -43,19 +45,7 @@ interface EnhancedTableHeadProps {
     orderBy: string;
     rowCount: number;
     columns: HeadCell[];
-}
-
-interface EnhancedTableToolbarProps {
-    numSelected: number;
-    title?: ReactNode,
-}
-
-interface EnhancedTableProps {
-    columns: HeadCell[];
-    defaultOrderBy?: string;
-    rowKey?: string;
-    title?: ReactNode,
-    useData: (props: any) => { loading: boolean; data: any[]; total: number };
+    editableRow: boolean;
 }
 
 const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
@@ -64,6 +54,7 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
     numSelected,
     rowCount,
     columns,
+    editableRow,
     onSort,
     onSelectAllClick,
 }) => {
@@ -104,10 +95,16 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
                         </TableSortLabel>
                     </TableCell>
                 ))}
+                {editableRow && <TableCell></TableCell>}
             </TableRow>
         </TableHead>
     );
 };
+
+interface EnhancedTableToolbarProps {
+    numSelected: number;
+    title?: ReactNode;
+}
 
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = ({ title, numSelected }) => {
     return (
@@ -135,7 +132,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = ({ title, numS
             )}
             {numSelected > 0 ? (
                 <Tooltip title="Delete">
-                    <IconButton>
+                    <IconButton color="error">
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>
@@ -150,11 +147,23 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = ({ title, numS
     );
 };
 
+interface EnhancedTableProps {
+    columns: HeadCell[];
+    defaultOrderBy?: string;
+    rowKey?: string;
+    title?: ReactNode;
+    editableRow?: boolean;
+    onRowEdit?: Function;
+    useData: (props: any) => { loading: boolean; data: any[]; total: number };
+}
+
 const EnhancedTable: React.FC<EnhancedTableProps> = ({
     columns,
     title,
     defaultOrderBy,
     rowKey = "id",
+    editableRow = true,
+    onRowEdit = null,
     useData,
 }) => {
     const [order, setOrder] = useState<Order>("asc");
@@ -201,7 +210,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                 selected.slice(selectedIndex + 1)
             );
         }
-
         setSelected(newSelected);
     };
 
@@ -240,36 +248,60 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                             onSort={handleSort}
                             rowCount={rows.length}
                             columns={columns}
+                            editableRow={editableRow && onRowEdit !== null}
                         />
                         <TableBody>
-                            {rows.map((row, index) => {
-                                const isItemSelected = isSelected(row[rowKey]);
-                                const labelId = `enhanced-table-checkbox-${index}`;
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell
+                                        colSpan={
+                                            columns.length + 1 + (editableRow && onRowEdit ? 1 : 0)
+                                        }>
+                                        <LinearProgress />
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                rows.map((row, index) => {
+                                    const isItemSelected = isSelected(row[rowKey]);
+                                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                                return (
-                                    <TableRow
-                                        hover
-                                        onClick={event => handleClick(event, row[rowKey])}
-                                        role="checkbox"
-                                        aria-checked={isItemSelected}
-                                        tabIndex={-1}
-                                        key={row[rowKey]}
-                                        selected={isItemSelected}>
-                                        <TableCell padding="checkbox">
-                                            <Checkbox
-                                                color="primary"
-                                                checked={isItemSelected}
-                                                inputProps={{
-                                                    "aria-labelledby": labelId,
-                                                }}
-                                            />
-                                        </TableCell>
-                                        {columns.map(c => (
-                                            <TableCell>{row[c.dataIndex]}</TableCell>
-                                        ))}
-                                    </TableRow>
-                                );
-                            })}
+                                    return (
+                                        <TableRow
+                                            hover
+                                            onClick={event => handleClick(event, row[rowKey])}
+                                            role="checkbox"
+                                            aria-checked={isItemSelected}
+                                            tabIndex={-1}
+                                            key={row[rowKey]}
+                                            selected={isItemSelected}>
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                    inputProps={{
+                                                        "aria-labelledby": labelId,
+                                                    }}
+                                                />
+                                            </TableCell>
+                                            {columns.map(c => (
+                                                <TableCell>{row[c.dataIndex]}</TableCell>
+                                            ))}
+                                            {editableRow && onRowEdit && (
+                                                <TableCell padding="checkbox" align="center">
+                                                    <IconButton
+                                                        color="primary"
+                                                        onClick={e => {
+                                                            e.stopPropagation();
+                                                            onRowEdit(row);
+                                                        }}>
+                                                        <EditIcon />
+                                                    </IconButton>
+                                                </TableCell>
+                                            )}
+                                        </TableRow>
+                                    );
+                                })
+                            )}
                             {emptyRows > 0 && (
                                 <TableRow
                                     style={{
@@ -281,15 +313,17 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
-                    component="div"
-                    count={total}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                {!loading && (
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={total}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
+                )}
             </Paper>
             <FormControlLabel
                 control={<Switch checked={dense} onChange={handleChangeDense} />}

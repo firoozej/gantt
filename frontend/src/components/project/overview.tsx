@@ -21,11 +21,8 @@ const Overview: FunctionComponent<PropTypes> = () => {
     const handleCreate = () => {
         setCreateEditModal({ visible: true, project: undefined });
     };
-    const handleOnRow = (project: ProjectType) => {
-        return {
-            onClick: () => setCreateEditModal({ visible: true, project }),
-        };
-    };
+    const handleRowEdit = (project: ProjectType) => setCreateEditModal({ visible: true, project });
+
     const columns = [
         {
             title: t("Title"),
@@ -52,7 +49,7 @@ const Overview: FunctionComponent<PropTypes> = () => {
                     </IconButton>
                 }
                 useData={useOverview.bind(null, PROJECTS_QUERY, "projects")}
-                //onRow={handleOnRow}
+                onRowEdit={handleRowEdit}
             />
             <CreateEditModal
                 {...createEditModal}
