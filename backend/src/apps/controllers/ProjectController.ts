@@ -10,6 +10,7 @@ import { CommandBus } from 'contexts/shared/domain/CommandBus';
 import { CreateProjectCommand } from 'contexts/projectManagement/application/project/command/CreateProjectCommand';
 import { UpdateProjectCommand } from 'contexts/projectManagement/application/project/command/UpdateProjectCommand';
 import { ProjectOverviewResponse } from 'contexts/projectManagement/application/project/ProjectOverviewResponse';
+import { Pagination } from 'contexts/projectManagement/application/Pagination';
 
 export class ProjectController {
     constructor(private queryBus: QueryBus, private commandBus: CommandBus) {}
@@ -26,9 +27,9 @@ export class ProjectController {
             }
         }
     }
-    async projects(): Promise<ProjectOverviewResponse> {
+    async projects(pagination: Pagination): Promise<ProjectOverviewResponse> {
         try {
-            const query = new ProjectsQuery();
+            const query = new ProjectsQuery(pagination);
             return await this.queryBus.ask<ProjectOverviewResponse>(query);
         } catch (e: any) {
             throw new ApplicationError(e.message, httpStatus.INTERNAL_SERVER_ERROR);

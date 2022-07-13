@@ -41,10 +41,10 @@ export const resolvers = {
                 return new ApolloError(e.message);
             }
         },
-        projects: async () => {
+        projects: async (_: any, args: any) => {
             const projectController = container.get('Apps.projectManagement.controllers.ProjectController');
             try {
-                return await projectController.projects();
+                return await projectController.projects(args.pagination);
             } catch (e: any) {
                 return new ApolloError(e.message);
             }

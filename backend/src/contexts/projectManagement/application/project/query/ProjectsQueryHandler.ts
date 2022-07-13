@@ -10,8 +10,8 @@ export class ProjectsQueryHandler implements QueryHandler<ProjectsQuery, Project
     subscribedTo(): Query {
         return ProjectsQuery;
     }
-    async handle(): Promise<ProjectOverviewResponse> {
-        const projects = await this.projectRepository.findAll();
+    async handle(_query: ProjectsQuery): Promise<ProjectOverviewResponse> {
+        const projects = await this.projectRepository.findAll(_query.pagination);
         const total = await this.projectRepository.count();
         return new ProjectOverviewResponse(projects, total);
     }

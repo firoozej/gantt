@@ -1,3 +1,4 @@
+import { Pagination } from 'contexts/projectManagement/application/Pagination';
 import { ProjectRepository } from 'contexts/projectManagement/domain/interface/ProjectRepository';
 import { Project } from 'contexts/projectManagement/domain/Project';
 import { Nullable } from 'contexts/shared/domain/Nullable';
@@ -14,8 +15,13 @@ export class MongoProjectRepository implements ProjectRepository {
         );
         return new Promise((resolve) => resolve(project));
     }
-    async findAll(): Promise<Array<Project>> {
-        return await ProjectModel.find().sort({createdAt: 'desc'});
+    async findAll(pagination: Pagination): Promise<Array<Project>> {
+        const { pageNumber, pageSize } = pagination;
+        //console.log(pagination);
+        return await ProjectModel.find()
+            .sort({ createdAt: 'desc' })
+            .skip(pageNumber > 0 ? (pageNumber - 1) * pageSize : 0)
+            .limit(pageSize);
     }
     async save(project: Omit<Project, 'id' | 'tasks'>): Promise<Project> {
         const newProject = new ProjectModel(project);
@@ -24,7 +30,7 @@ export class MongoProjectRepository implements ProjectRepository {
         return { ...result._doc, id: result._id.toString() };
     }
     async update(project: Omit<Project, 'tasks'>): Promise<Project> {
-        const result = await ProjectModel.findByIdAndUpdate(project.id, project, {new: true});
+        const result = await ProjectModel.findByIdAndUpdate(project.id, project, { new: true });
         return { ...result._doc, id: result._id.toString() };
     }
     async count(): Promise<number> {
