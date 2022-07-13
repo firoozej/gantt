@@ -1,5 +1,4 @@
 import React, { ChangeEvent, MouseEvent, ReactNode, useState } from "react";
-import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -20,7 +19,6 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
 import LinearProgress from "@mui/material/LinearProgress";
 
 interface Data {
@@ -33,26 +31,25 @@ export interface HeadCell {
     disablePadding?: boolean;
     dataIndex: keyof Data;
     title: string;
-    numeric?: boolean;
     render?: (value: any, record?: Data) => ReactNode;
 }
 
 interface EnhancedTableHeadProps {
-    numSelected: number;
-    onSort: (event: MouseEvent<unknown>, property: keyof Data) => void;
-    onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
     order: Order;
     orderBy: string;
     rowCount: number;
+    numSelected: number;
     columns: HeadCell[];
     editableRow: boolean;
+    onSort: (event: MouseEvent<unknown>, property: keyof Data) => void;
+    onSelectAllClick: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
     order,
     orderBy,
-    numSelected,
     rowCount,
+    numSelected,
     columns,
     editableRow,
     onSort,
@@ -72,14 +69,13 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{
-                            "aria-label": "select all desserts",
+                            "aria-label": "select all visible rows",
                         }}
                     />
                 </TableCell>
                 {columns.map(headCell => (
                     <TableCell
                         key={headCell.dataIndex}
-                        align={headCell.numeric ? "right" : "left"}
                         padding={headCell.disablePadding ? "none" : "normal"}
                         sortDirection={orderBy === headCell.dataIndex ? order : false}>
                         <TableSortLabel
@@ -87,11 +83,6 @@ const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
                             direction={orderBy === headCell.dataIndex ? order : "asc"}
                             onClick={handleSort(headCell.dataIndex)}>
                             {headCell.title}
-                            {orderBy === headCell.dataIndex ? (
-                                <Box component="span" sx={visuallyHidden}>
-                                    {order === "desc" ? "sorted descending" : "sorted ascending"}
-                                </Box>
-                            ) : null}
                         </TableSortLabel>
                     </TableCell>
                 ))}
@@ -108,15 +99,7 @@ interface EnhancedTableToolbarProps {
 
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = ({ title, numSelected }) => {
     return (
-        <Toolbar
-            sx={{
-                pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-                ...(numSelected > 0 && {
-                    bgcolor: theme =>
-                        alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                }),
-            }}>
+        <Toolbar>
             {numSelected > 0 ? (
                 <Typography
                     sx={{ flex: "1 1 100%" }}
@@ -148,11 +131,9 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = ({ title, numS
 };
 
 interface EnhancedTableProps {
-    columns: HeadCell[];
-    defaultOrderBy?: string;
     rowKey?: string;
     title?: ReactNode;
-    editableRow?: boolean;
+    columns: HeadCell[];
     onRowEdit?: Function;
     useData: (props: any) => { loading: boolean; data: any[]; total: number };
 }
@@ -160,14 +141,12 @@ interface EnhancedTableProps {
 const EnhancedTable: React.FC<EnhancedTableProps> = ({
     columns,
     title,
-    defaultOrderBy,
     rowKey = "id",
-    editableRow = true,
     onRowEdit = null,
     useData,
 }) => {
     const [order, setOrder] = useState<Order>("asc");
-    const [orderBy, setOrderBy] = useState<keyof Data | undefined>(defaultOrderBy);
+    const [orderBy, setOrderBy] = useState<keyof Data | undefined>(undefined);
     const [selected, setSelected] = useState<readonly any[]>([]);
     const [page, setPage] = useState(0);
     const [dense, setDense] = useState(false);
@@ -228,9 +207,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
 
     const isSelected = (rowKey: string | number) => selected.indexOf(rowKey) !== -1;
 
-    // Avoid a layout jump when reaching the last page with empty rows.
-    const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
     return (
         <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "100%", mb: 2 }}>
@@ -248,14 +224,14 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                             onSort={handleSort}
                             rowCount={rows.length}
                             columns={columns}
-                            editableRow={editableRow && onRowEdit !== null}
+                            editableRow={onRowEdit !== null}
                         />
                         <TableBody>
                             {loading ? (
                                 <TableRow>
                                     <TableCell
                                         colSpan={
-                                            columns.length + 1 + (editableRow && onRowEdit ? 1 : 0)
+                                            columns.length + 1 + (onRowEdit ? 1 : 0)
                                         }>
                                         <LinearProgress />
                                     </TableCell>
@@ -283,10 +259,14 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                                                     }}
                                                 />
                                             </TableCell>
-                                            {columns.map(c => (
-                                                <TableCell>{row[c.dataIndex]}</TableCell>
+                                            {columns.map(column => (
+                                                <TableCell key={column.dataIndex}>
+                                                    {column.render
+                                                        ? column.render(row[column.dataIndex], row)
+                                                        : row[column.dataIndex]}
+                                                </TableCell>
                                             ))}
-                                            {editableRow && onRowEdit && (
+                                            {onRowEdit && (
                                                 <TableCell padding="checkbox" align="center">
                                                     <IconButton
                                                         color="primary"
@@ -301,14 +281,6 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                                         </TableRow>
                                     );
                                 })
-                            )}
-                            {emptyRows > 0 && (
-                                <TableRow
-                                    style={{
-                                        height: (dense ? 33 : 53) * emptyRows,
-                                    }}>
-                                    <TableCell colSpan={6} />
-                                </TableRow>
                             )}
                         </TableBody>
                     </Table>
