@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import "antd/dist/antd.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider, HttpLink, from } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
-import { message } from "ui-ant";
-import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
+import CssBaseline from '@mui/material/CssBaseline';
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Gantt from "./components/gantt/ganttChart";
 import TranslationProvider from "./translation/translationProvider";
@@ -15,13 +14,14 @@ import { initialGanttData } from "test";
 import ProjectOverview from "components/project/overview";
 
 const App: React.FC = () => {
+    const [hasApiError, setHasApiError] = useState(false);
     const data = { ...initialGanttData };
-    i18n.use(initReactI18next) // passes i18n down to react-i18next
+    i18n.use(initReactI18next)
         .init({
             resources,
             lng: "en",
             interpolation: {
-                escapeValue: false, // react already safes from xss
+                escapeValue: false,
             },
         });
 
@@ -38,7 +38,7 @@ const App: React.FC = () => {
             );
 
         if (networkError) errorMessage = `[Network error]: ${networkError}`;
-        message.error(errorMessage);
+        setHasApiError(true);
     });
 
     const client = new ApolloClient({
@@ -51,6 +51,7 @@ const App: React.FC = () => {
             <TranslationProvider local="en-GB">
                 <ApolloProvider client={client}>
                     <LocalizationProvider dateAdapter={AdapterMoment}>
+                        <CssBaseline />
                         <Router>
                             <Routes>
                                 <Route path="/projects" element={<ProjectOverview />} />
