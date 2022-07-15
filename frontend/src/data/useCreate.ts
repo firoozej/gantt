@@ -1,15 +1,18 @@
 import { useMutation } from "@apollo/client";
-import { message } from "ui-ant";
 
 export const useCreate = ({ mutation, update }: any) => {
-    const [create, { loading, error }] = useMutation(mutation, {
+    const [create, { loading }] = useMutation(mutation, {
         update,
     });
-    if (error) {
-        message.error("Error Occured!");
-    }
+
+    const createMutation = async (variables: any) => {
+        await create({ variables }).catch(e => {
+            return e.message;
+        });
+    };
+
     return {
         loading,
-        create,
+        create: createMutation,
     };
 };

@@ -59,11 +59,8 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                 predictedEnd: values.predictedEnd.format("yyyy-MM-DD"),
             }),
         };
-        project
-            ? await update({ variables })
-            : await create({
-                  variables,
-              });
+
+        project ? await update(variables) : await create(variables);
         onClose();
     };
     return (
@@ -72,8 +69,7 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
             open={visible}
             onOk={() => submitForm(formRef)}
             onClose={onClose}
-            confirmLoading={createLoading || updateLoading}
-            >
+            confirmLoading={createLoading || updateLoading}>
             <Form
                 onSubmit={handleConfirm}
                 defaultValues={
