@@ -34,6 +34,7 @@ const DraggableDialog: React.FC<PropTypes> = ({
     okButtonProps,
     confirmLoading = false,
     children,
+    ...rest
 }) => {
     const { t } = useTranslation();
     return (
@@ -41,23 +42,25 @@ const DraggableDialog: React.FC<PropTypes> = ({
             open={open}
             onClose={() => onClose()}
             PaperComponent={PaperComponent}
-            aria-labelledby="draggable-dialog-title">
-            <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
-                {title}
-            </DialogTitle>
-            <DialogContent>{children}</DialogContent>
-            <DialogActions>
-                <Button onClick={() => onClose()}>{t("Cancel")}</Button>
-                <LoadingButton
-                    onClick={() => onOk()}
-                    loading={confirmLoading}
-                    size="small"
-                    variant="contained"
-                    aria-label="ok"
-                    {...okButtonProps}>
-                    {t("OK")}
-                </LoadingButton>
-            </DialogActions>
+            aria-labelledby="draggable-dialog-title" >
+            <div data-test={(rest as any)["data-test"]}>
+                <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+                    {title}
+                </DialogTitle>
+                <DialogContent>{children}</DialogContent>
+                <DialogActions>
+                    <Button onClick={() => onClose()}>{t("Cancel")}</Button>
+                    <LoadingButton
+                        onClick={() => onOk()}
+                        loading={confirmLoading}
+                        size="small"
+                        variant="contained"
+                        aria-label="ok"
+                        {...okButtonProps}>
+                        {t("OK")}
+                    </LoadingButton>
+                </DialogActions>
+            </div>
         </Dialog>
     );
 };

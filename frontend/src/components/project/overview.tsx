@@ -44,12 +44,13 @@ const Overview: FunctionComponent<PropTypes> = () => {
             <Grid
                 columns={columns}
                 title={
-                    <IconButton onClick={handleCreate} size="large" color="primary">
+                    <IconButton onClick={handleCreate} size="large" color="primary" data-test="Create Project">
                         <AddBoxIcon />
                     </IconButton>
                 }
                 useData={useOverview.bind(null, PROJECTS_QUERY, "projects")}
                 onRowEdit={handleRowEdit}
+                data-test="Projects Grid"
             />
             <CreateEditModal
                 {...createEditModal}

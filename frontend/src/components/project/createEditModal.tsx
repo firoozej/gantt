@@ -69,7 +69,8 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
             open={visible}
             onOk={() => submitForm(formRef)}
             onClose={onClose}
-            confirmLoading={createLoading || updateLoading}>
+            confirmLoading={createLoading || updateLoading}
+            data-test="Create Project Dialog">
             <Form
                 onSubmit={handleConfirm}
                 defaultValues={
@@ -94,6 +95,7 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                                 message: t("{{name}} is required", { name: t("Title") }),
                             },
                         }}
+                        data-test={"Title"}
                     />
                     <DateInput
                         name="startDate"
@@ -104,6 +106,7 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                                 message: t("{{name}} is required", { name: t("Start Date") }),
                             },
                         }}
+                        data-test={"Start Date"}
                     />
                     <DateInput
                         name="predictedEnd"
@@ -119,6 +122,7 @@ const CreateEditModal: React.FC<PropTypes> = ({ project, visible, onClose }) => 
                                 return true;
                             },
                         }}
+                        data-test={"Predicted End"}
                     />
                 </Stack>
             </Form>

@@ -1,45 +1,26 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
 
-Cypress.Commands.add("getBySel", (selector, ...args) => {
-    return cy.get(`[data-test=${selector}]`, ...args);
+Cypress.Commands.add("getByDataTest", (selector, ...args) => {
+    return cy.get(`[data-test="${selector}"]`, ...args);
 });
 
-Cypress.Commands.add("getBySelLike", (selector, ...args) => {
-    return cy.get(`[data-test*=${selector}]`, ...args);
+
+Cypress.Commands.add("selectDate", (selector, date: string) => {
+    cy.getByDataTest(selector).within(el => cy.get("input").click({force: true}));
+    cy.get(`[aria-label="calendar view is open, go to text input view"]`).click();
+    cy.get(`[aria-labelledby="${selector} Dialog"] input`).clear().type(date);
+    cy.get(`[aria-labelledby="${selector} Dialog"]`).contains("OK").click();
+});
+
+Cypress.Commands.add("selectGridRow", (selector, rowNumber: number = 1) => {
+    cy.get(`[data-test="${selector}"] tbody .MuiTableRow-root:nth-of-type(${rowNumber})`);
+});
+
+Cypress.Commands.add("selectEditGridRow", (selector, rowNumber: number = 1) => {
+    cy.selectGridRow(selector, rowNumber).within(() => cy.getByDataTest("Edit Row").click());
+});
+
+Cypress.Commands.add("randomString", (selector, rowNumber: number = 1) => {
+    const uniqueSeed = Date.now().toString();
+    return Cypress._.uniqueId(uniqueSeed);
 });

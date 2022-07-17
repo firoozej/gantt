@@ -144,6 +144,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
     rowKey = "id",
     onRowEdit = null,
     useData,
+    ...rest
 }) => {
     const [order, setOrder] = useState<Order>("asc");
     const [orderBy, setOrderBy] = useState<keyof Data | undefined>(undefined);
@@ -214,8 +215,8 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
-                        aria-labelledby="tableTitle"
-                        size={dense ? "small" : "medium"}>
+                        size={dense ? "small" : "medium"}
+                        data-test={(rest as any)["data-test"]}>
                         <EnhancedTableHead
                             numSelected={selected.length}
                             order={order}
@@ -228,11 +229,8 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                         />
                         <TableBody>
                             {loading ? (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={
-                                            columns.length + 1 + (onRowEdit ? 1 : 0)
-                                        }>
+                                <TableRow data-test="Loading Row">
+                                    <TableCell colSpan={columns.length + 1 + (onRowEdit ? 1 : 0)}>
                                         <LinearProgress />
                                     </TableCell>
                                 </TableRow>
@@ -273,7 +271,8 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({
                                                         onClick={e => {
                                                             e.stopPropagation();
                                                             onRowEdit(row);
-                                                        }}>
+                                                        }}
+                                                        data-test="Edit Row">
                                                         <EditIcon />
                                                     </IconButton>
                                                 </TableCell>

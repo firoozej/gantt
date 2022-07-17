@@ -25,9 +25,11 @@ const DateInput: React.FC<PropTypes> = ({ rules, name, ...rest }) => {
                     <MobileDatePicker
                         className="ui-forminput"
                         inputFormat="yyyy-MM-DD"
-                        {...rest}
+                        DialogProps={{
+                            "aria-labelledby": `${rest["data-test"]} Dialog`,
+                        }}
                         {...field}
-                        renderInput={params => <TextField size="small" {...params} />}
+                        renderInput={params => <TextField size="small" {...params} {...rest} />}
                     />
                 )}
             />
